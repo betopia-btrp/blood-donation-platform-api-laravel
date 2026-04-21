@@ -14,19 +14,19 @@ class RegisterRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name'      => 'required|string|max:100',
-            'email'     => 'required|email|unique:users,email',
-            'password'  => 'required|string|min:8|confirmed',
-            'role'      => 'required|in:user,organization',
+            'name' => 'required|string|max:100',
+            'email' => 'required|email|unique:users,email',
+            'password' => 'required|string|min:8',
+            'role' => 'required|in:user,organization',
         ];
     }
 
     public function messages(): array
     {
         return [
-            'email.unique'      => 'Email already registered.',
+            'email.unique' => 'Email already registered.',
             'password.confirmed' => 'Passwords do not match.',
-            'role.in'           => 'Role must be user or organization.',
+            'role.in' => 'Role must be user or organization.',
         ];
     }
 }
