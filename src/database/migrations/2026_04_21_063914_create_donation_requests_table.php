@@ -12,17 +12,17 @@ return new class extends Migration {
     {
         Schema::create('donation_requests', function (Blueprint $table) {
             $table->id();
-            // $table->foreignId('requester_user_id')->constrained('users')->onDelete('cascade');
-            // $table->enum('blood_group', ['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-']);
-            // $table->integer('quantity');
-            // $table->string('hospital_name', 150)->nullable();
-            // $table->string('division', 100)->nullable();
-            // $table->string('district', 100)->nullable();
-            // $table->string('area', 150)->nullable();
-            // $table->string('location')->nullable();
-            // $table->text('note')->nullable();
-            // $table->enum('status', ['open', 'fulfilled', 'cancelled'])->default('open');
-            // $table->timestamp('needed_at')->nullable();
+            $table->foreignId('requester_user_id')->constrained('users')->onDelete('cascade');
+            $table->enum('blood_group', ['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-']);
+            $table->integer('quantity');
+            $table->string('hospital_name', 150)->nullable();
+            $table->string('division', 100)->nullable();
+            $table->string('district', 100)->nullable();
+            $table->string('area', 150)->nullable();
+            $table->string('location')->nullable();
+            $table->text('note')->nullable();
+            $table->enum('status', ['open', 'fulfilled', 'cancelled'])->default('open');
+            $table->timestamp('needed_at')->nullable();
             $table->timestamps();
         });
     }
