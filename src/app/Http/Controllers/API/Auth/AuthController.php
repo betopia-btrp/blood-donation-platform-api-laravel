@@ -5,7 +5,10 @@ namespace App\Http\Controllers\API\Auth;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\RegisterRequest;
 use App\Http\Requests\Auth\LoginRequest;
+use App\Http\Requests\Auth\ChangePasswordRequest;
 use App\Models\User;
+use App\Models\UserProfile;
+use App\Models\Organization;
 use App\Traits\ApiResponse;
 use Illuminate\Support\Facades\Hash;
 use PHPOpenSourceSaver\JWTAuth\Facades\JWTAuth;
@@ -16,12 +19,25 @@ class AuthController extends Controller
 
     public function register(RegisterRequest $request)
     {
+        // Create user
         $user = User::create([
             'name'     => $request->name,
             'email'    => $request->email,
             'password' => Hash::make($request->password),
             'role'     => $request->role,
         ]);
+
+
+        if ($user->role === 'user') {
+            UserProfile::create(['user_id' => $user->id]);
+        }
+
+        if ($user->role === 'organization') {
+            Organization::create([
+                'user_id'  => $user->id,
+                'org_name' => $request->name,
+            ]);
+        }
 
         $token = JWTAuth::fromUser($user);
 
@@ -48,6 +64,8 @@ class AuthController extends Controller
             return $this->error('Account has been deactivated', 403);
         }
 
+        $user = $this->loadProfile($user);
+
         return $this->success([
             'user'  => $user,
             'token' => $token,
@@ -63,6 +81,8 @@ class AuthController extends Controller
                 return $this->error('User not found', 404);
             }
 
+            $user = $this->loadProfile($user);
+
             return $this->success($user, 'Authenticated user');
         } catch (\Exception $e) {
             return $this->error('Invalid or expired token', 401);
@@ -73,5 +93,39 @@ class AuthController extends Controller
     {
         JWTAuth::invalidate(JWTAuth::getToken());
         return $this->success(null, 'Logged out successfully');
+    }
+
+    public function changePassword(ChangePasswordRequest $request)
+    {
+        try {
+            $user = JWTAuth::parseToken()->authenticate();
+        } catch (\Exception $e) {
+            return $this->error('Unauthenticated', 401);
+        }
+
+        if (!Hash::check($request->current_password, $user->password)) {
+            return $this->error('Current password is incorrect', 400);
+        }
+
+        $user->update([
+            'password' => Hash::make($request->password),
+        ]);
+
+        JWTAuth::invalidate(JWTAuth::getToken());
+
+        return $this->success(null, 'Password changed. Please login again.');
+    }
+
+    private function loadProfile(User $user): User
+    {
+        if ($user->role === 'user') {
+            $user->load('profile');
+        }
+
+        if ($user->role === 'organization') {
+            $user->load('organization');
+        }
+
+        return $user;
     }
 }
