@@ -18,7 +18,7 @@ class UserProfile extends Model
     ];
 
     protected $casts = [
-        'is_available'       => 'boolean',
+        'is_available' => 'boolean',
         'last_donation_date' => 'date',
     ];
 
