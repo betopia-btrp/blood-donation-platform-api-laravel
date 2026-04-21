@@ -12,9 +12,9 @@ return new class extends Migration {
     {
         Schema::create('organization_documents', function (Blueprint $table) {
             $table->id();
-            // $table->foreignId('organization_id')->constrained('organizations')->onDelete('cascade');
-            // $table->enum('document_type', ['trade_license', 'ngo_certificate', 'tax_certificate', 'other'])->nullable();
-            // $table->string('document_url');
+            $table->foreignId('organization_id')->constrained('organizations')->onDelete('cascade');
+            $table->enum('document_type', ['trade_license', 'ngo_certificate', 'tax_certificate', 'other'])->nullable();
+            $table->string('document_url');
             $table->timestamps();
         });
     }
