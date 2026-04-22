@@ -4,6 +4,7 @@ use App\Http\Controllers\API\Auth\AuthController;
 use App\Http\Controllers\API\User\ProfileController;
 use App\Http\Controllers\API\Organization\OrganizationProfileController;
 use App\Http\Controllers\API\Admin\UserManagementController;
+use App\Http\Controllers\API\Dashboard\OrgDashboardController;
 use App\Http\Controllers\API\Dashboard\UserDashboardController;
 use App\Http\Controllers\API\DonationRequest\DonationRequestController;
 use App\Http\Controllers\API\Donor\DonorActionController;
@@ -87,4 +88,12 @@ Route::middleware(['auth:api', 'role:user'])
         Route::get('/my-events',         [UserDashboardController::class, 'myEvents']);
         Route::get('/my-donations',      [UserDashboardController::class, 'myDonations']);
         Route::get('/stats',             [UserDashboardController::class, 'stats']);
+    });
+
+Route::middleware(['auth:api', 'role:organization'])
+    ->prefix('dashboard/org')
+    ->group(function () {
+        Route::get('/events',      [OrgDashboardController::class, 'myEvents']);
+        Route::get('/events/{id}', [OrgDashboardController::class, 'myEventShow']);
+        Route::get('/stats',       [OrgDashboardController::class, 'stats']);
     });
