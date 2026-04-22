@@ -5,6 +5,7 @@ use App\Http\Controllers\API\User\ProfileController;
 use App\Http\Controllers\API\Organization\OrganizationProfileController;
 use App\Http\Controllers\API\Admin\UserManagementController;
 use App\Http\Controllers\API\DonationRequest\DonationRequestController;
+use App\Http\Controllers\API\Donor\DonorActionController;
 use App\Http\Controllers\API\Donor\DonorController;
 use Illuminate\Support\Facades\Route;
 
@@ -65,3 +66,13 @@ Route::middleware('auth:api')->prefix('donation-requests')->group(function () {
     Route::post('/{id}/complete',           [DonationRequestController::class, 'complete']);
     Route::post('/{id}/report',             [DonationRequestController::class, 'report']);
 });
+
+Route::middleware(['auth:api', 'role:user'])
+    ->prefix('my')
+    ->group(function () {
+        Route::get('/incoming-requests',              [DonorActionController::class, 'incomingRequests']);
+        Route::get('/incoming-requests/{id}',         [DonorActionController::class, 'incomingRequestShow']);
+        Route::post('/incoming-requests/{id}/accept', [DonorActionController::class, 'accept']);
+        Route::post('/incoming-requests/{id}/reject', [DonorActionController::class, 'reject']);
+        Route::post('/incoming-requests/{id}/confirm-donated', [DonorActionController::class, 'confirmDonated']);
+    });
