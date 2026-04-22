@@ -2,10 +2,13 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Event extends Model
 {
+    use HasFactory;
+
     protected $fillable = [
         'organization_id',
         'title',
@@ -16,11 +19,7 @@ class Event extends Model
         'division',
         'max_capacity',
         'banner_image',
-        'status'
-    ];
-
-    protected $casts = [
-        'event_date' => 'datetime',
+        'status',
     ];
 
     public function organization()
