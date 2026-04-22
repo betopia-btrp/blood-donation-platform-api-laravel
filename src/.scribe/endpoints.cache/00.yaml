@@ -64,7 +64,7 @@ endpoints:
         name: role
         description: ''
         required: true
-        example: user
+        example: organization
         type: string
         enumValues:
           - user
@@ -76,7 +76,7 @@ endpoints:
       name: b
       email: zbailey@example.net
       password: '-0pBNvYgxw'
-      role: user
+      role: organization
     fileParameters: []
     responses: []
     responseFields: []
@@ -396,7 +396,7 @@ endpoints:
         name: last_donation_date
         description: 'Must be a valid date.'
         required: false
-        example: '2026-04-21T16:55:43'
+        example: '2026-04-22T02:20:20'
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -441,7 +441,7 @@ endpoints:
       district: 'n'
       area: g
       is_available: false
-      last_donation_date: '2026-04-21T16:55:43'
+      last_donation_date: '2026-04-22T02:20:20'
       avatar_url: 'http://www.bailey.biz/quos-velit-et-fugiat-sunt-nihil-accusantium-harum.html'
       name: i
       phone: khwaykcmyuwpwlvq

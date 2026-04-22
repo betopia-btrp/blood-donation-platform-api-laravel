@@ -118,7 +118,7 @@
     </ul>
 
     <ul class="toc-footer" id="last-updated">
-        <li>Last updated: April 21, 2026</li>
+        <li>Last updated: April 22, 2026</li>
     </ul>
 </div>
 
@@ -163,7 +163,7 @@ You can switch the language used with the tabs at the top right (or from the nav
     \"name\": \"b\",
     \"email\": \"zbailey@example.net\",
     \"password\": \"-0pBNvYgxw\",
-    \"role\": \"user\"
+    \"role\": \"organization\"
 }"
 </code></pre></div>
 
@@ -182,7 +182,7 @@ let body = {
     "name": "b",
     "email": "zbailey@example.net",
     "password": "-0pBNvYgxw",
-    "role": "user"
+    "role": "organization"
 };
 
 fetch(url, {
@@ -310,10 +310,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="role"                data-endpoint="POSTapi-auth-register"
-               value="user"
+               value="organization"
                data-component="body">
     <br>
-<p>Example: <code>user</code></p>
+<p>Example: <code>organization</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>user</code></li> <li><code>organization</code></li></ul>
         </div>
@@ -998,7 +998,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     \"district\": \"n\",
     \"area\": \"g\",
     \"is_available\": false,
-    \"last_donation_date\": \"2026-04-21T16:55:43\",
+    \"last_donation_date\": \"2026-04-22T02:20:20\",
     \"avatar_url\": \"http:\\/\\/www.bailey.biz\\/quos-velit-et-fugiat-sunt-nihil-accusantium-harum.html\",
     \"name\": \"i\",
     \"phone\": \"khwaykcmyuwpwlvq\"
@@ -1022,7 +1022,7 @@ let body = {
     "district": "n",
     "area": "g",
     "is_available": false,
-    "last_donation_date": "2026-04-21T16:55:43",
+    "last_donation_date": "2026-04-22T02:20:20",
     "avatar_url": "http:\/\/www.bailey.biz\/quos-velit-et-fugiat-sunt-nihil-accusantium-harum.html",
     "name": "i",
     "phone": "khwaykcmyuwpwlvq"
@@ -1189,10 +1189,10 @@ Must be one of:
  &nbsp;
                 <input type="text" style="display: none"
                               name="last_donation_date"                data-endpoint="PUTapi-user-profile"
-               value="2026-04-21T16:55:43"
+               value="2026-04-22T02:20:20"
                data-component="body">
     <br>
-<p>Must be a valid date. Example: <code>2026-04-21T16:55:43</code></p>
+<p>Must be a valid date. Example: <code>2026-04-22T02:20:20</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>avatar_url</code></b>&nbsp;&nbsp;
