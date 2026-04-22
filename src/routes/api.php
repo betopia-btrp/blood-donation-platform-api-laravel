@@ -104,7 +104,12 @@ Route::middleware(['auth:api', 'role:user'])
 Route::middleware(['auth:api', 'role:organization'])
     ->prefix('dashboard/org')
     ->group(function () {
-        Route::get('/events',      [OrgDashboardController::class, 'myEvents']);
-        Route::get('/events/{id}', [OrgDashboardController::class, 'myEventShow']);
-        Route::get('/stats',       [OrgDashboardController::class, 'stats']);
+        Route::get('/events',                          [OrgDashboardController::class, 'myEvents']);
+        Route::get('/events/{id}',                     [OrgDashboardController::class, 'myEventShow']);
+        Route::get('/stats',                           [OrgDashboardController::class, 'stats']);
+        Route::post('/events',                         [EventController::class, 'store']);
+        Route::put('/events/{id}',                     [EventController::class, 'update']);
+        Route::delete('/events/{id}',                  [EventController::class, 'destroy']);
+        Route::get('/events/{id}/registrations',       [EventController::class, 'registrations']);
+        Route::put('/events/{id}/attendance',          [EventController::class, 'updateAttendance']);
     });

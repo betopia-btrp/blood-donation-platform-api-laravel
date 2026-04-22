@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
@@ -7,6 +8,7 @@ class Payment extends Model
 {
     protected $fillable = [
         'donation_request_id',
+        'event_id',
         'payer_user_id',
         'amount',
         'status',
