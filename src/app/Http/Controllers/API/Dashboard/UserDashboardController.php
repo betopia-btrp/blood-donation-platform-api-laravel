@@ -52,14 +52,43 @@ class UserDashboardController extends Controller
 
         if (!$request) return $this->error('Request not found', 404);
 
+        // Recipient stats
         $recipientStats = DonationRequestRecipient::where('request_id', $id)
             ->selectRaw('response_status, count(*) as total')
             ->groupBy('response_status')
             ->pluck('total', 'response_status');
 
+        // Check payment status
+        $payment = \App\Models\Payment::where('donation_request_id', $id)
+            ->where('status', 'confirmed')
+            ->first();
+
+        $donors = null;
+
+        if ($payment) {
+            $donors = DonationRequestRecipient::with([
+                'donorProfile:id,user_id,blood_group,district,trust_score',
+                'donorProfile.user:id,name,email',
+            ])
+                ->where('request_id', $id)
+                ->where('response_status', 'accepted')
+                ->get()
+                ->map(function ($item) {
+                    return [
+                        'name'        => $item->donorProfile->user->name,
+                        'email'       => $item->donorProfile->user->email,
+                        'blood_group' => $item->donorProfile->blood_group,
+                        'district'    => $item->donorProfile->district,
+                        'trust_score' => $item->donorProfile->trust_score,
+                    ];
+                });
+        }
+
         return $this->success([
-            'request'         => $request,
-            'recipient_stats' => $recipientStats,
+            'request'          => $request,
+            'recipient_stats'  => $recipientStats,
+            'payment_confirmed' => (bool) $payment,
+            'accepted_donors'  => $donors,
         ], 'Request details retrieved');
     }
 
