@@ -4,6 +4,7 @@ use App\Http\Controllers\API\Auth\AuthController;
 use App\Http\Controllers\API\User\ProfileController;
 use App\Http\Controllers\API\Organization\OrganizationProfileController;
 use App\Http\Controllers\API\Admin\UserManagementController;
+use App\Http\Controllers\API\Dashboard\UserDashboardController;
 use App\Http\Controllers\API\DonationRequest\DonationRequestController;
 use App\Http\Controllers\API\Donor\DonorActionController;
 use App\Http\Controllers\API\Donor\DonorController;
@@ -75,4 +76,15 @@ Route::middleware(['auth:api', 'role:user'])
         Route::post('/incoming-requests/{id}/accept', [DonorActionController::class, 'accept']);
         Route::post('/incoming-requests/{id}/reject', [DonorActionController::class, 'reject']);
         Route::post('/incoming-requests/{id}/confirm-donated', [DonorActionController::class, 'confirmDonated']);
+    });
+
+Route::middleware(['auth:api', 'role:user'])
+    ->prefix('dashboard')
+    ->group(function () {
+        Route::get('/my-requests',       [UserDashboardController::class, 'myRequests']);
+        Route::get('/my-requests/{id}',  [UserDashboardController::class, 'myRequestShow']);
+        Route::get('/incoming-requests', [UserDashboardController::class, 'incomingRequests']);
+        Route::get('/my-events',         [UserDashboardController::class, 'myEvents']);
+        Route::get('/my-donations',      [UserDashboardController::class, 'myDonations']);
+        Route::get('/stats',             [UserDashboardController::class, 'stats']);
     });
