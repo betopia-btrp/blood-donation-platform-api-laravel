@@ -4,6 +4,7 @@ use App\Http\Controllers\API\Auth\AuthController;
 use App\Http\Controllers\API\User\ProfileController;
 use App\Http\Controllers\API\Organization\OrganizationProfileController;
 use App\Http\Controllers\API\Admin\UserManagementController;
+use App\Http\Controllers\API\DonationRequest\DonationRequestController;
 use App\Http\Controllers\API\Donor\DonorController;
 use Illuminate\Support\Facades\Route;
 
@@ -52,4 +53,15 @@ Route::middleware(['auth:api', 'role:admin'])
 Route::middleware('auth:api')->group(function () {
     Route::get('/donors',      [DonorController::class, 'index']);
     Route::get('/donors/{id}', [DonorController::class, 'show']);
+});
+
+Route::middleware('auth:api')->prefix('donation-requests')->group(function () {
+    Route::post('/',                        [DonationRequestController::class, 'store']);
+    Route::get('/{id}',                     [DonationRequestController::class, 'show']);
+    Route::delete('/{id}',                  [DonationRequestController::class, 'destroy']);
+    Route::get('/{id}/acceptances',         [DonationRequestController::class, 'acceptances']);
+    Route::post('/{id}/confirm-payment',    [DonationRequestController::class, 'confirmPayment']);
+    Route::get('/{id}/donors-revealed',     [DonationRequestController::class, 'donorsRevealed']);
+    Route::post('/{id}/complete',           [DonationRequestController::class, 'complete']);
+    Route::post('/{id}/report',             [DonationRequestController::class, 'report']);
 });
