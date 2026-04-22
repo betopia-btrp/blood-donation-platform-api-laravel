@@ -11,6 +11,7 @@ use App\Http\Controllers\API\Donor\DonorActionController;
 use App\Http\Controllers\API\Donor\DonorController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\Organization\EventController;
+use App\Http\Controllers\API\Event\EventDiscoveryController;
 
 Route::get('/health', function () {
     return response()->json([
@@ -113,3 +114,11 @@ Route::middleware(['auth:api', 'role:organization'])
         Route::get('/events/{id}/registrations',       [EventController::class, 'registrations']);
         Route::put('/events/{id}/attendance',          [EventController::class, 'updateAttendance']);
     });
+
+Route::middleware('auth:api')->group(function () {
+    Route::get('/events',                  [EventDiscoveryController::class, 'index']);
+    Route::get('/events/{id}',             [EventDiscoveryController::class, 'show']);
+    Route::post('/events/{id}/register',   [EventDiscoveryController::class, 'register']);
+    Route::delete('/events/{id}/register', [EventDiscoveryController::class, 'cancelRegistration']);
+    Route::post('/events/{id}/report',     [EventDiscoveryController::class, 'report']);
+});
