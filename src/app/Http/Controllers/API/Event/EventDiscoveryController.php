@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Models\Event;
 use App\Models\EventRegistration;
 use App\Models\Report;
-use App\Models\UserProfile;
 use App\Traits\ApiResponse;
 use Illuminate\Http\Request;
 use PHPOpenSourceSaver\JWTAuth\Facades\JWTAuth;
@@ -14,6 +13,17 @@ use PHPOpenSourceSaver\JWTAuth\Facades\JWTAuth;
 class EventDiscoveryController extends Controller
 {
     use ApiResponse;
+
+    private function getOptionalUser()
+    {
+        try {
+            $token = JWTAuth::getToken();
+            if (!$token) return null;
+            return JWTAuth::parseToken()->authenticate();
+        } catch (\Exception $e) {
+            return null;
+        }
+    }
 
     private function getUser()
     {
@@ -24,8 +34,31 @@ class EventDiscoveryController extends Controller
         }
     }
 
+    // For Guest or Authenticate User
+    private function injectEventContext(object $event, $user): array
+    {
+        $data = $event->toArray();
+
+        if ($user && $user->profile) {
+            $registration = EventRegistration::where('event_id', $event->id)
+                ->where('profile_id', $user->profile->id)
+                ->first();
+
+            $data['is_registered']     = (bool) $registration;
+            $data['registration_id']   = $registration?->id;
+            $data['attendance_status'] = $registration?->attendance_status;
+        } else {
+            $data['is_registered']     = null;
+            $data['registration_id']   = null;
+            $data['attendance_status'] = null;
+        }
+
+        return $data;
+    }
+
     public function index(Request $request)
     {
+        $user  = $this->getOptionalUser();
         $query = Event::with(['organization:id,org_name'])
             ->withCount('registrations')
             ->where('status', 'upcoming');
@@ -38,14 +71,14 @@ class EventDiscoveryController extends Controller
             $query->where('division', 'ilike', '%' . $request->division . '%');
         }
 
-        if ($request->filled('status')) {
-            $query->where('status', $request->status);
-        }
-
         $events = $query->orderBy('event_date', 'asc')->paginate(20);
 
+        $data = collect($events->items())->map(function ($event) use ($user) {
+            return $this->injectEventContext($event, $user);
+        });
+
         return $this->success([
-            'events'       => $events->items(),
+            'events'       => $data,
             'current_page' => $events->currentPage(),
             'last_page'    => $events->lastPage(),
             'total'        => $events->total(),
@@ -54,6 +87,7 @@ class EventDiscoveryController extends Controller
 
     public function show($id)
     {
+        $user  = $this->getOptionalUser();
         $event = Event::with(['organization:id,org_name'])
             ->withCount('registrations')
             ->where('status', 'upcoming')
@@ -61,7 +95,10 @@ class EventDiscoveryController extends Controller
 
         if (!$event) return $this->error('Event not found', 404);
 
-        return $this->success($event, 'Event details retrieved');
+        return $this->success(
+            $this->injectEventContext($event, $user),
+            'Event details retrieved'
+        );
     }
 
     public function register($id)
