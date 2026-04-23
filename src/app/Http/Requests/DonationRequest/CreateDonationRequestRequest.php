@@ -20,9 +20,9 @@ class CreateDonationRequestRequest extends FormRequest
             'division'       => 'nullable|string|max:100',
             'district'       => 'required|string|max:100',
             'area'           => 'nullable|string|max:150',
-            'location'       => 'required|string',
+            'location'       => 'nullable|string',
             'note'           => 'nullable|string',
-            'needed_at'      => 'required|date',
+            'needed_at'      => 'nullable|date',
             'donor_ids'      => 'required|array|min:1',
             'donor_ids.*'    => 'integer|exists:user_profiles,id',
         ];

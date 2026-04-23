@@ -40,6 +40,19 @@ class AdminEventController extends Controller
         return $this->success($event, 'Event details retrieved');
     }
 
+    public function approve($id)
+    {
+        $event = Event::find($id);
+        if (!$event) return $this->error('Event not found', 404);
+
+        if ($event->status !== 'pending') {
+            return $this->error('Event is not pending approval', 400);
+        }
+
+        $event->update(['status' => 'upcoming']);
+        return $this->success(null, 'Event approved and published');
+    }
+
     public function cancel($id)
     {
         $event = Event::find($id);

@@ -12,7 +12,7 @@ return new class extends Migration {
     {
         Schema::create('payments', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('donation_request_id')->constrained('donation_requests')->onDelete('cascade');
+            $table->foreignId('donation_request_id')->nullable()->constrained('donation_requests')->onDelete('cascade');
             $table->foreignId('payer_user_id')->constrained('users')->onDelete('cascade');
             $table->decimal('amount', 10, 2)->default(0);
             $table->enum('status', ['pending', 'confirmed'])->default('confirmed');
