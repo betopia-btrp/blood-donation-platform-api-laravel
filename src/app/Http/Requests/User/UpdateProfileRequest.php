@@ -19,7 +19,7 @@ class UpdateProfileRequest extends FormRequest
             'district'           => 'nullable|string|max:100',
             'area'               => 'nullable|string|max:150',
             'is_available'       => 'nullable|boolean',
-            'last_donation_date' => 'nullable|date',
+            'last_donation_date' => 'nullable|date|before_or_equal:today',
             'avatar_url'         => 'nullable|string',
             'name'               => 'nullable|string|max:100',
             'phone'              => 'nullable|string|max:20',
