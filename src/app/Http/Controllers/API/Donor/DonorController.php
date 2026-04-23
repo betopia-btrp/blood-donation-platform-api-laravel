@@ -51,8 +51,11 @@ class DonorController extends Controller
     {
         $user  = $this->getOptionalUser();
         $query = UserProfile::query()
-            ->whereHas('user', function ($q) {
+            ->whereHas('user', function ($q) use ($user) {
                 $q->where('is_active', true)->where('role', 'user');
+                if ($user) {
+                    $q->where('id', '!=', $user->id);
+                }
             })
             ->with(['user:id,name,role']);
 
