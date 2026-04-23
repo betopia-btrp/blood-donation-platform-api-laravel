@@ -5,7 +5,7 @@ services:
   app:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: docker/Dockerfile.dev
     container_name: blood_app
     restart: unless-stopped
     working_dir: /var/www
