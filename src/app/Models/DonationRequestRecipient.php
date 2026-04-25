@@ -3,9 +3,11 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class DonationRequestRecipient extends Model
 {
+    use HasFactory;
     protected $fillable = [
         'request_id',
         'donor_profile_id',

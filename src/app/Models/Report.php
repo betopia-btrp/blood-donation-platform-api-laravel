@@ -3,9 +3,11 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Report extends Model
 {
+    use HasFactory;
     protected $fillable = [
         'reporter_user_id',
         'target_id',

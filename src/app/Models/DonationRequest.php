@@ -3,9 +3,11 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class DonationRequest extends Model
 {
+    use HasFactory;
     protected $fillable = [
         'requester_user_id',
         'blood_group',
