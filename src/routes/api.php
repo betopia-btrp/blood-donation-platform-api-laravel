@@ -16,6 +16,7 @@ use App\Http\Controllers\API\Donor\DonorActionController;
 use App\Http\Controllers\API\Donor\DonorController;
 use App\Http\Controllers\API\Organization\EventController;
 use App\Http\Controllers\API\Event\EventDiscoveryController;
+use App\Http\Controllers\API\Organization\OrganizationDocumentController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/health', function () {
@@ -50,6 +51,9 @@ Route::middleware(['auth:api', 'role:organization'])
     ->group(function () {
         Route::get('/profile', [OrganizationProfileController::class, 'show']);
         Route::put('/profile', [OrganizationProfileController::class, 'update']);
+        Route::get('/documents',       [OrganizationDocumentController::class, 'index']);
+        Route::post('/documents',      [OrganizationDocumentController::class, 'store']);
+        Route::delete('/documents/{id}', [OrganizationDocumentController::class, 'destroy']);
     });
 
 Route::get('/donors',      [DonorController::class, 'index']);

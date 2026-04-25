@@ -19,7 +19,7 @@ class OrganizationProfileController extends Controller
             return $this->error('Unauthenticated', 401);
         }
 
-        $user->load('organization');
+        $user->load('organization', 'organization.documents');
 
         return $this->success($user, 'Organization profile retrieved');
     }
