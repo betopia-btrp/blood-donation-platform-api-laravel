@@ -26,7 +26,7 @@ class UserManagementController extends Controller
 
     public function show($id)
     {
-        $user = User::with(['profile', 'organization'])->find($id);
+        $user = User::with(['profile', 'organization', 'organization.documents'])->find($id);
 
         if (!$user) return $this->error('User not found', 404);
 
