@@ -27,10 +27,17 @@ class AuthTest extends TestCase
     public function test_organization_can_register()
     {
         $response = $this->postJson('/api/auth/register', [
-            'name' => 'Test Org',
-            'email' => 'org@test.com',
-            'password' => 'password123',
-            'role' => 'organization',
+            'org_name'       => 'Test Organization',
+            'contact_person' => 'Test Person',
+            'email'          => 'org@test.com',
+            'password'       => 'password123',
+            'role'           => 'organization',
+            'documents'      => [
+                [
+                    'document_type' => 'trade_license',
+                    'document_url'  => 'https://res.cloudinary.com/test/doc.pdf',
+                ]
+            ],
         ]);
 
         $response->assertStatus(201);

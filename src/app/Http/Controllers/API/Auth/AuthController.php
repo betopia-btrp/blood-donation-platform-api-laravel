@@ -12,6 +12,7 @@ use App\Models\Organization;
 use App\Traits\ApiResponse;
 use Illuminate\Support\Facades\Hash;
 use PHPOpenSourceSaver\JWTAuth\Facades\JWTAuth;
+use App\Models\OrganizationDocument;
 
 class AuthController extends Controller
 {
@@ -19,24 +20,31 @@ class AuthController extends Controller
 
     public function register(RegisterRequest $request)
     {
-        // Create user
         $user = User::create([
-            'name'     => $request->name,
+            'name'     => $request->role === 'user' ? $request->name : $request->org_name,
             'email'    => $request->email,
             'password' => Hash::make($request->password),
             'role'     => $request->role,
         ]);
-
 
         if ($user->role === 'user') {
             UserProfile::create(['user_id' => $user->id]);
         }
 
         if ($user->role === 'organization') {
-            Organization::create([
-                'user_id'  => $user->id,
-                'org_name' => $request->name,
+            $org = Organization::create([
+                'user_id'        => $user->id,
+                'org_name'       => $request->org_name,
+                'contact_person' => $request->contact_person,
             ]);
+
+            foreach ($request->documents as $doc) {
+                OrganizationDocument::create([
+                    'organization_id' => $org->id,
+                    'document_type'   => $doc['document_type'],
+                    'document_url'    => $doc['document_url'],
+                ]);
+            }
         }
 
         $token = JWTAuth::fromUser($user);
@@ -62,6 +70,15 @@ class AuthController extends Controller
 
         if (!$user->is_active) {
             return $this->error('Account has been deactivated', 403);
+        }
+
+        if ($user->role === 'organization') {
+            $user->load('organization');
+
+            // rejected = blocked
+            if ($user->organization->verification_status === 'rejected') {
+                return $this->error('Your organization account has been rejected', 403);
+            }
         }
 
         $user = $this->loadProfile($user);
