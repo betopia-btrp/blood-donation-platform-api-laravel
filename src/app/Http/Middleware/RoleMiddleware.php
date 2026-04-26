@@ -4,15 +4,11 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
-use App\Traits\ApiResponse;
 use PHPOpenSourceSaver\JWTAuth\Facades\JWTAuth;
-
 
 class RoleMiddleware
 {
-    use ApiResponse;
-
-    public function handle(Request $request, Closure $next, string ...$roles)
+    public function handle(Request $request, Closure $next, string ...$roles): mixed
     {
         try {
             $user = JWTAuth::parseToken()->authenticate();
@@ -23,7 +19,14 @@ class RoleMiddleware
             ], 401);
         }
 
-        if (!in_array($user->role, $roles)) {
+        if (!$user) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Unauthenticated',
+            ], 401);
+        }
+
+        if (!in_array($user->role?->name, $roles)) {
             return response()->json([
                 'success' => false,
                 'message' => 'Forbidden. Required role: ' . implode(' or ', $roles),

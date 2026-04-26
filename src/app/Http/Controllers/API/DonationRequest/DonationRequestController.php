@@ -28,31 +28,31 @@ class DonationRequestController extends Controller
 
         $donationRequest = DonationRequest::create([
             'requester_user_id' => $user->id,
-            'blood_group'       => $request->blood_group,
-            'quantity'          => $request->quantity,
-            'hospital_name'     => $request->hospital_name,
-            'division'          => $request->division,
-            'district'          => $request->district,
-            'area'              => $request->area,
-            'location'          => $request->location,
-            'note'              => $request->note,
-            'needed_at'         => $request->needed_at,
-            'status'            => 'open',
+            'blood_group' => $request->blood_group,
+            'quantity' => $request->quantity,
+            'hospital_name' => $request->hospital_name,
+            'division' => $request->division,
+            'district' => $request->district,
+            'area' => $request->area,
+            'location' => $request->location,
+            'note' => $request->note,
+            'needed_at' => $request->needed_at,
+            'status' => 'open',
         ]);
 
         $recipients = [];
         foreach ($request->donor_ids as $profileId) {
             $recipients[] = DonationRequestRecipient::create([
-                'request_id'      => $donationRequest->id,
+                'request_id' => $donationRequest->id,
                 'donor_profile_id' => $profileId,
                 'response_status' => 'pending',
-                'sent_at'         => now(),
+                'sent_at' => now(),
             ]);
         }
 
         return $this->success([
-            'request'    => $donationRequest,
-            'sent_to'    => count($recipients) . ' donors',
+            'request' => $donationRequest,
+            'sent_to' => count($recipients) . ' donors',
         ], 'Donation request created and sent to donors', 201);
     }
 
@@ -73,7 +73,7 @@ class DonationRequestController extends Controller
             return $this->error('Request not found', 404);
         }
 
-        if ($donationRequest->requester_user_id !== $user->id && $user->role !== 'admin') {
+        if ($donationRequest->requester_user_id !== $user->id && $user->role->name !== 'admin') {
             return $this->error('Forbidden', 403);
         }
 
@@ -170,10 +170,10 @@ class DonationRequestController extends Controller
 
         Payment::create([
             'donation_request_id' => $donationRequest->id,
-            'payer_user_id'       => $user->id,
-            'amount'              => 0,
-            'status'              => 'confirmed',
-            'confirmed_at'        => now(),
+            'payer_user_id' => $user->id,
+            'amount' => 0,
+            'status' => 'confirmed',
+            'confirmed_at' => now(),
         ]);
 
         return $this->success(null, 'Payment confirmed. You can now view donor contact info.');
@@ -189,14 +189,17 @@ class DonationRequestController extends Controller
         }
 
         $donationRequest = DonationRequest::find($id);
-        if (!$donationRequest) return $this->error('Request not found', 404);
-        if ($donationRequest->requester_user_id !== $user->id) return $this->error('Forbidden', 403);
+        if (!$donationRequest)
+            return $this->error('Request not found', 404);
+        if ($donationRequest->requester_user_id !== $user->id)
+            return $this->error('Forbidden', 403);
 
         $payment = Payment::where('donation_request_id', $id)
             ->where('status', 'confirmed')
             ->first();
 
-        if (!$payment) return $this->error('Please confirm payment first', 403);
+        if (!$payment)
+            return $this->error('Please confirm payment first', 403);
 
         $donors = DonationRequestRecipient::with([
             'donorProfile:id,user_id,blood_group,district,division,trust_score',
@@ -206,10 +209,10 @@ class DonationRequestController extends Controller
             ->where('response_status', 'accepted')
             ->get()
             ->map(fn($item) => [
-                'name'        => $item->donorProfile->user->name,
-                'email'       => $item->donorProfile->user->email,
+                'name' => $item->donorProfile->user->name,
+                'email' => $item->donorProfile->user->email,
                 'blood_group' => $item->donorProfile->blood_group,
-                'district'    => $item->donorProfile->district,
+                'district' => $item->donorProfile->district,
                 'trust_score' => $item->donorProfile->trust_score,
             ]);
 
@@ -276,11 +279,11 @@ class DonationRequestController extends Controller
 
         Report::create([
             'reporter_user_id' => $user->id,
-            'target_id'        => $id,
-            'target_type'      => 'donation_request',
-            'report_type'      => $request->input('report_type', 'other'),
-            'reason'           => $request->input('reason'),
-            'status'           => 'pending',
+            'target_id' => $id,
+            'target_type' => 'donation_request',
+            'report_type' => $request->input('report_type', 'other'),
+            'reason' => $request->input('reason'),
+            'status' => 'pending',
         ]);
 
         return $this->success(null, 'Report submitted');

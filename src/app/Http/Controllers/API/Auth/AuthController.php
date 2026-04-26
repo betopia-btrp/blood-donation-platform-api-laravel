@@ -20,29 +20,31 @@ class AuthController extends Controller
 
     public function register(RegisterRequest $request)
     {
+        $role = \App\Models\Role::where('name', $request->role)->firstOrFail();
+
         $user = User::create([
-            'name'     => $request->role === 'user' ? $request->name : $request->org_name,
-            'email'    => $request->email,
+            'name' => $request->role === 'user' ? $request->name : $request->org_name,
+            'email' => $request->email,
             'password' => Hash::make($request->password),
-            'role'     => $request->role,
+            'role_id' => $role->id,
         ]);
 
-        if ($user->role === 'user') {
+        if ($user->role->name === 'user') {
             UserProfile::create(['user_id' => $user->id]);
         }
 
-        if ($user->role === 'organization') {
+        if ($user->role->name === 'organization') {
             $org = Organization::create([
-                'user_id'        => $user->id,
-                'org_name'       => $request->org_name,
+                'user_id' => $user->id,
+                'org_name' => $request->org_name,
                 'contact_person' => $request->contact_person,
             ]);
 
             foreach ($request->documents as $doc) {
                 OrganizationDocument::create([
                     'organization_id' => $org->id,
-                    'document_type'   => $doc['document_type'],
-                    'document_url'    => $doc['document_url'],
+                    'document_type' => $doc['document_type'],
+                    'document_url' => $doc['document_url'],
                 ]);
             }
         }
@@ -50,7 +52,7 @@ class AuthController extends Controller
         $token = JWTAuth::fromUser($user);
 
         return $this->success([
-            'user'  => $user,
+            'user' => $user,
             'token' => $token,
         ], 'Registration successful', 201);
     }
@@ -58,7 +60,7 @@ class AuthController extends Controller
     public function login(LoginRequest $request)
     {
         $token = JWTAuth::attempt([
-            'email'    => $request->email,
+            'email' => $request->email,
             'password' => $request->password,
         ]);
 
@@ -72,10 +74,9 @@ class AuthController extends Controller
             return $this->error('Account has been deactivated', 403);
         }
 
-        if ($user->role === 'organization') {
+        if ($user->role->name === 'organization') {
             $user->load('organization');
 
-            // rejected = blocked
             if ($user->organization->verification_status === 'rejected') {
                 return $this->error('Your organization account has been rejected', 403);
             }
@@ -84,7 +85,7 @@ class AuthController extends Controller
         $user = $this->loadProfile($user);
 
         return $this->success([
-            'user'  => $user,
+            'user' => $user,
             'token' => $token,
         ], 'Login successful');
     }
@@ -135,11 +136,11 @@ class AuthController extends Controller
 
     private function loadProfile(User $user): User
     {
-        if ($user->role === 'user') {
+        if ($user->role->name === 'user') {
             $user->load('profile');
         }
 
-        if ($user->role === 'organization') {
+        if ($user->role->name === 'organization') {
             $user->load('organization');
         }
 

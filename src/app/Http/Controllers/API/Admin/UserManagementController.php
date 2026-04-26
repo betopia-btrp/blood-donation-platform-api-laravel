@@ -17,10 +17,10 @@ class UserManagementController extends Controller
             ->paginate(20);
 
         return $this->success([
-            'users'        => $users->items(),
+            'users' => $users->items(),
             'current_page' => $users->currentPage(),
-            'last_page'    => $users->lastPage(),
-            'total'        => $users->total(),
+            'last_page' => $users->lastPage(),
+            'total' => $users->total(),
         ], 'Users retrieved');
     }
 
@@ -28,7 +28,8 @@ class UserManagementController extends Controller
     {
         $user = User::with(['profile', 'organization', 'organization.documents'])->find($id);
 
-        if (!$user) return $this->error('User not found', 404);
+        if (!$user)
+            return $this->error('User not found', 404);
 
         return $this->success($user, 'User details retrieved');
     }
@@ -36,7 +37,8 @@ class UserManagementController extends Controller
     public function activate($id)
     {
         $user = User::find($id);
-        if (!$user) return $this->error('User not found', 404);
+        if (!$user)
+            return $this->error('User not found', 404);
 
         $user->update(['is_active' => true]);
         return $this->success($user, 'User activated');
@@ -45,9 +47,10 @@ class UserManagementController extends Controller
     public function deactivate($id)
     {
         $user = User::find($id);
-        if (!$user) return $this->error('User not found', 404);
+        if (!$user)
+            return $this->error('User not found', 404);
 
-        if ($user->role === 'admin') {
+        if ($user->role->name === 'admin') {
             return $this->error('Cannot deactivate admin account', 403);
         }
 
@@ -58,9 +61,10 @@ class UserManagementController extends Controller
     public function destroy($id)
     {
         $user = User::find($id);
-        if (!$user) return $this->error('User not found', 404);
+        if (!$user)
+            return $this->error('User not found', 404);
 
-        if ($user->role === 'admin') {
+        if ($user->role->name === 'admin') {
             return $this->error('Cannot delete admin account', 403);
         }
 
@@ -71,9 +75,10 @@ class UserManagementController extends Controller
     public function approveOrg($id)
     {
         $user = User::with('organization')->find($id);
-        if (!$user) return $this->error('User not found', 404);
+        if (!$user)
+            return $this->error('User not found', 404);
 
-        if ($user->role !== 'organization') {
+        if ($user->role->name !== 'organization') {
             return $this->error('User is not an organization', 400);
         }
 
@@ -90,9 +95,10 @@ class UserManagementController extends Controller
     public function rejectOrg($id)
     {
         $user = User::with('organization')->find($id);
-        if (!$user) return $this->error('User not found', 404);
+        if (!$user)
+            return $this->error('User not found', 404);
 
-        if ($user->role !== 'organization') {
+        if ($user->role->name !== 'organization') {
             return $this->error('User is not an organization', 400);
         }
 

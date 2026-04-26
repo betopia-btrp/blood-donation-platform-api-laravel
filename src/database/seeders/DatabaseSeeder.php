@@ -24,20 +24,19 @@ class DatabaseSeeder extends Seeder
         ]);
 
         // Donors (20 users)
-        $donors = User::factory(20)->create(['role' => 'user']);
+        $donors = User::factory(20)->create();
         $donorProfiles = $donors->map(function ($user) {
             return UserProfile::factory()->create(['user_id' => $user->id]);
         });
 
         // Organizations (5 orgs)
-        $orgs = User::factory(5)->create(['role' => 'organization']);
+        $orgs = User::factory(5)->organization()->create();
         $orgProfiles = $orgs->map(function ($user) {
             $org = Organization::factory()->create([
                 'user_id' => $user->id,
                 'org_name' => $user->name . ' Foundation',
             ]);
 
-            // 2 documents per org
             OrganizationDocument::factory(2)->create([
                 'organization_id' => $org->id,
             ]);
@@ -50,7 +49,7 @@ class DatabaseSeeder extends Seeder
         $orgProfiles->each(function ($org) use (&$events) {
             $orgEvents = Event::factory(3)->create([
                 'organization_id' => $org->id,
-                'status'          => 'upcoming',
+                'status' => 'upcoming',
             ]);
             $events = $events->merge($orgEvents);
         });
@@ -66,7 +65,7 @@ class DatabaseSeeder extends Seeder
 
                 if (!$exists) {
                     EventRegistration::factory()->create([
-                        'event_id'  => $event->id,
+                        'event_id' => $event->id,
                         'profile_id' => $profile->id,
                     ]);
                 }
@@ -77,7 +76,7 @@ class DatabaseSeeder extends Seeder
         $requests = collect();
         for ($i = 0; $i < 15; $i++) {
             $requester = $donors->random();
-            $request   = DonationRequest::factory()->create([
+            $request = DonationRequest::factory()->create([
                 'requester_user_id' => $requester->id,
             ]);
             $requests->push($request);
@@ -89,11 +88,11 @@ class DatabaseSeeder extends Seeder
 
             $selectedDonors->each(function ($profile) use ($request) {
                 DonationRequestRecipient::create([
-                    'request_id'       => $request->id,
+                    'request_id' => $request->id,
                     'donor_profile_id' => $profile->id,
-                    'response_status'  => fake()->randomElement(['pending', 'accepted', 'rejected', 'donated']),
-                    'sent_at'          => now(),
-                    'responded_at'     => now(),
+                    'response_status' => fake()->randomElement(['pending', 'accepted', 'rejected', 'donated']),
+                    'sent_at' => now(),
+                    'responded_at' => now(),
                 ]);
             });
 
@@ -105,10 +104,10 @@ class DatabaseSeeder extends Seeder
             if ($acceptedCount > 0 && rand(0, 1)) {
                 Payment::create([
                     'donation_request_id' => $request->id,
-                    'payer_user_id'       => $requester->id,
-                    'amount'              => 0,
-                    'status'              => 'confirmed',
-                    'confirmed_at'        => now(),
+                    'payer_user_id' => $requester->id,
+                    'amount' => 0,
+                    'status' => 'confirmed',
+                    'confirmed_at' => now(),
                 ]);
             }
         }

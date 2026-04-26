@@ -17,7 +17,8 @@ class DonorController extends Controller
     {
         try {
             $token = JWTAuth::getToken();
-            if (!$token) return null;
+            if (!$token)
+                return null;
             return JWTAuth::parseToken()->authenticate();
         } catch (\Exception $e) {
             return null;
@@ -26,16 +27,17 @@ class DonorController extends Controller
 
     public function index(SearchDonorRequest $request)
     {
-        $user  = $this->getOptionalUser();
+        $user = $this->getOptionalUser();
         $query = UserProfile::query()
             ->whereHas('user', function ($q) use ($user) {
-                $q->where('is_active', true)->where('role', 'user');
+                $q->where('is_active', true)
+                    ->whereHas('role', fn($r) => $r->where('name', 'user'));
                 if ($user) {
                     $q->where('id', '!=', $user->id);
                 }
             })
             ->where('is_available', true)
-            ->with(['user:id,name,role']);
+            ->with(['user:id,name,role_id']);
 
         if ($request->filled('blood_group')) {
             $query->where('blood_group', $request->blood_group);
@@ -70,11 +72,11 @@ class DonorController extends Controller
             $arr = $profile->toArray();
 
             if ($user) {
-                $isRequested          = in_array($profile->id, $requestedDonorIds);
-                $arr['is_requested']  = $isRequested;
+                $isRequested = in_array($profile->id, $requestedDonorIds);
+                $arr['is_requested'] = $isRequested;
                 $arr['request_status'] = $isRequested ? $requestedStatuses[$profile->id] : null;
             } else {
-                $arr['is_requested']  = null;
+                $arr['is_requested'] = null;
                 $arr['request_status'] = null;
             }
 
@@ -82,36 +84,38 @@ class DonorController extends Controller
         });
 
         return $this->success([
-            'donors'       => $data,
+            'donors' => $data,
             'current_page' => $donors->currentPage(),
-            'last_page'    => $donors->lastPage(),
-            'total'        => $donors->total(),
+            'last_page' => $donors->lastPage(),
+            'total' => $donors->total(),
         ], 'Donors retrieved');
     }
 
     public function show($id)
     {
-        $user    = $this->getOptionalUser();
-        $profile = UserProfile::with(['user:id,name,role'])
+        $user = $this->getOptionalUser();
+        $profile = UserProfile::with(['user:id,name,role_id'])
             ->whereHas('user', function ($q) {
-                $q->where('is_active', true)->where('role', 'user');
+                $q->where('is_active', true)
+                    ->whereHas('role', fn($r) => $r->where('name', 'user'));
             })
             ->find($id);
 
-        if (!$profile) return $this->error('Donor not found', 404);
+        if (!$profile)
+            return $this->error('Donor not found', 404);
 
         $data = [
-            'id'                 => $profile->id,
-            'name'               => $profile->user->name,
-            'blood_group'        => $profile->blood_group,
-            'division'           => $profile->division,
-            'district'           => $profile->district,
-            'area'               => $profile->area,
-            'is_available'       => $profile->is_available,
-            'trust_score'        => $profile->trust_score,
+            'id' => $profile->id,
+            'name' => $profile->user->name,
+            'blood_group' => $profile->blood_group,
+            'division' => $profile->division,
+            'district' => $profile->district,
+            'area' => $profile->area,
+            'is_available' => $profile->is_available,
+            'trust_score' => $profile->trust_score,
             'last_donation_date' => $profile->last_donation_date,
-            'is_requested'       => null,
-            'request_status'     => null,
+            'is_requested' => null,
+            'request_status' => null,
         ];
 
         if ($user) {
@@ -122,7 +126,7 @@ class DonorController extends Controller
                 ->where('donor_profile_id', $profile->id)
                 ->first();
 
-            $data['is_requested']  = (bool) $requested;
+            $data['is_requested'] = (bool) $requested;
             $data['request_status'] = $requested?->response_status;
         }
 

@@ -15,27 +15,32 @@ abstract class TestCase extends BaseTestCase
 
     protected function createUser(string $role = 'user', bool $isActive = true): User
     {
+        $roleModel = \App\Models\Role::where('name', $role)->first();
+
         $user = User::create([
-            'name'      => 'Test User',
-            'email'     => fake()->unique()->safeEmail(),
-            'password'  => bcrypt('password123'),
-            'role'      => $role,
+            'name' => fake()->name(),
+            'email' => fake()->unique()->safeEmail(),
+            'password' => bcrypt('password123'),
+            'role_id' => $roleModel->id,
             'is_active' => $isActive,
         ]);
 
         if ($role === 'user') {
-            UserProfile::create(['user_id' => $user->id]);
+            UserProfile::create([
+                'user_id' => $user->id,
+                'full_name' => fake()->name(),
+            ]);
         }
 
         if ($role === 'organization') {
             Organization::create([
-                'user_id'             => $user->id,
-                'org_name'            => 'Test Org',
+                'user_id' => $user->id,
+                'org_name' => fake()->company(),
                 'verification_status' => 'approved',
             ]);
         }
 
-        return $user;
+        return $user->fresh('role');
     }
 
     protected function getToken(User $user): string

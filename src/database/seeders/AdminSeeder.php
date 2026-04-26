@@ -10,12 +10,14 @@ class AdminSeeder extends Seeder
 {
     public function run(): void
     {
+        $adminRole = \App\Models\Role::where('name', 'admin')->first();
+
         User::firstOrCreate(
             ['email' => 'admin@blood.com'],
             [
-                'name'      => 'Super Admin',
-                'password'  => Hash::make('password123'),
-                'role'      => 'admin',
+                'name' => 'System Admin',
+                'password' => Hash::make('password123'),
+                'role_id' => $adminRole->id,
                 'is_active' => true,
             ]
         );

@@ -5,8 +5,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\DB;
 
-return new class extends Migration
-{
+return new class extends Migration {
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
@@ -35,7 +34,7 @@ return new class extends Migration
         });
 
         DB::table('users')->get()->each(function ($user) {
-            $role = DB::table('roles')->where('id', $user->role_id)->first();
+            $role = DB::table('roles')->where('id', $user->role->name_id)->first();
             DB::table('users')->where('id', $user->id)->update([
                 'role' => $role?->name ?? 'user',
             ]);

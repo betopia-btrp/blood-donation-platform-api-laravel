@@ -19,55 +19,56 @@ class AdminDashboardController extends Controller
     public function stats()
     {
         $totalUsers = User::count();
-        $usersByRole = User::selectRaw('role, count(*) as total')
-            ->groupBy('role')
+        $usersByRole = User::join('roles', 'users.role_id', '=', 'roles.id')
+            ->selectRaw('roles.name as role, count(*) as total')
+            ->groupBy('roles.name')
             ->pluck('total', 'role');
 
-        $activeUsers   = User::where('is_active', true)->count();
+        $activeUsers = User::where('is_active', true)->count();
         $inactiveUsers = User::where('is_active', false)->count();
 
-        $totalEvents      = Event::count();
-        $eventsByStatus   = Event::selectRaw('status, count(*) as total')
+        $totalEvents = Event::count();
+        $eventsByStatus = Event::selectRaw('status, count(*) as total')
             ->groupBy('status')
             ->pluck('total', 'status');
 
-        $totalRequests    = DonationRequest::count();
+        $totalRequests = DonationRequest::count();
         $requestsByStatus = DonationRequest::selectRaw('status, count(*) as total')
             ->groupBy('status')
             ->pluck('total', 'status');
 
         $totalDonations = DonationRequestRecipient::where('response_status', 'donated')->count();
 
-        $totalReports   = Report::count();
+        $totalReports = Report::count();
         $reportsByStatus = Report::selectRaw('status, count(*) as total')
             ->groupBy('status')
             ->pluck('total', 'status');
 
-        $totalPayments  = Payment::count();
-        $totalRevenue   = Payment::where('status', 'confirmed')->sum('amount');
+        $totalPayments = Payment::count();
+        $totalRevenue = Payment::where('status', 'confirmed')->sum('amount');
 
         return $this->success([
             'users' => [
-                'total'    => $totalUsers,
-                'active'   => $activeUsers,
+                'total' => $totalUsers,
+                'active' => $activeUsers,
                 'inactive' => $inactiveUsers,
-                'by_role'  => $usersByRole,
+                'by_role' => $usersByRole,
             ],
             'events' => [
-                'total'     => $totalEvents,
+                'total' => $totalEvents,
                 'by_status' => $eventsByStatus,
             ],
             'donation_requests' => [
-                'total'     => $totalRequests,
+                'total' => $totalRequests,
                 'by_status' => $requestsByStatus,
             ],
-            'donations'  => $totalDonations,
+            'donations' => $totalDonations,
             'reports' => [
-                'total'     => $totalReports,
+                'total' => $totalReports,
                 'by_status' => $reportsByStatus,
             ],
             'payments' => [
-                'total'   => $totalPayments,
+                'total' => $totalPayments,
                 'revenue' => $totalRevenue,
             ],
         ], 'Admin stats retrieved');
