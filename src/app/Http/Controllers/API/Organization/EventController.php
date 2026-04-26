@@ -160,21 +160,25 @@ class EventController extends Controller
             'profile.user:id,name,email',
         ])
             ->where('event_id', $id)
-            ->get()
-            ->map(function ($item) {
-                return [
-                    'registration_id'   => $item->id,
-                    'name'              => $item->profile->user->name,
-                    'email'             => $item->profile->user->email,
-                    'blood_group'       => $item->profile->blood_group,
-                    'district'          => $item->profile->district,
-                    'trust_score'       => $item->profile->trust_score,
-                    'attendance_status' => $item->attendance_status,
-                    'registration_date' => $item->registration_date,
-                ];
-            });
+            ->paginate(20);
 
-        return $this->success($registrations, 'Registrations retrieved');
+        $data = collect($registrations->items())->map(fn($item) => [
+            'registration_id'   => $item->id,
+            'name'              => $item->profile->user->name,
+            'email'             => $item->profile->user->email,
+            'blood_group'       => $item->profile->blood_group,
+            'district'          => $item->profile->district,
+            'trust_score'       => $item->profile->trust_score,
+            'attendance_status' => $item->attendance_status,
+            'registration_date' => $item->registration_date,
+        ]);
+
+        return $this->success([
+            'registrations' => $data,
+            'current_page'  => $registrations->currentPage(),
+            'last_page'     => $registrations->lastPage(),
+            'total'         => $registrations->total(),
+        ], 'Registrations retrieved');
     }
 
     public function updateAttendance(Request $request, $id)
