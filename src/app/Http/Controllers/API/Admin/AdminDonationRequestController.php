@@ -48,16 +48,14 @@ class AdminDonationRequestController extends Controller
         ])
             ->where('request_id', $id)
             ->get()
-            ->map(function ($item) {
-                return [
-                    'name'            => $item->donorProfile->user->name,
-                    'email'           => $item->donorProfile->user->email,
-                    'blood_group'     => $item->donorProfile->blood_group,
-                    'trust_score'     => $item->donorProfile->trust_score,
-                    'response_status' => $item->response_status,
-                    'responded_at'    => $item->responded_at,
-                ];
-            });
+            ->map(fn($item) => [
+                'name'            => $item->donorProfile->user->name,
+                'email'           => $item->donorProfile->user->email,
+                'blood_group'     => $item->donorProfile->blood_group,
+                'trust_score'     => $item->donorProfile->trust_score,
+                'response_status' => $item->response_status,
+                'responded_at'    => $item->responded_at,
+            ]);
 
         return $this->success([
             'request'    => $request,

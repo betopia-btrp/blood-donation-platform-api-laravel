@@ -189,22 +189,14 @@ class DonationRequestController extends Controller
         }
 
         $donationRequest = DonationRequest::find($id);
-
-        if (!$donationRequest) {
-            return $this->error('Request not found', 404);
-        }
-
-        if ($donationRequest->requester_user_id !== $user->id) {
-            return $this->error('Forbidden', 403);
-        }
+        if (!$donationRequest) return $this->error('Request not found', 404);
+        if ($donationRequest->requester_user_id !== $user->id) return $this->error('Forbidden', 403);
 
         $payment = Payment::where('donation_request_id', $id)
             ->where('status', 'confirmed')
             ->first();
 
-        if (!$payment) {
-            return $this->error('Please confirm payment first', 403);
-        }
+        if (!$payment) return $this->error('Please confirm payment first', 403);
 
         $donors = DonationRequestRecipient::with([
             'donorProfile:id,user_id,blood_group,district,division,trust_score',
@@ -213,15 +205,13 @@ class DonationRequestController extends Controller
             ->where('request_id', $id)
             ->where('response_status', 'accepted')
             ->get()
-            ->map(function ($item) {
-                return [
-                    'name'        => $item->donorProfile->user->name,
-                    'email'       => $item->donorProfile->user->email,
-                    'blood_group' => $item->donorProfile->blood_group,
-                    'district'    => $item->donorProfile->district,
-                    'trust_score' => $item->donorProfile->trust_score,
-                ];
-            });
+            ->map(fn($item) => [
+                'name'        => $item->donorProfile->user->name,
+                'email'       => $item->donorProfile->user->email,
+                'blood_group' => $item->donorProfile->blood_group,
+                'district'    => $item->donorProfile->district,
+                'trust_score' => $item->donorProfile->trust_score,
+            ]);
 
         return $this->success($donors, 'Donor contact info revealed');
     }

@@ -24,29 +24,6 @@ class DonorController extends Controller
         }
     }
 
-    // For Guest or Authenticate User
-    private function injectDonorContext(object $profile, $user): array
-    {
-        $data = $profile->toArray();
-
-        if ($user) {
-            $requested = DonationRequestRecipient::whereHas('donationRequest', function ($q) use ($user) {
-                $q->where('requester_user_id', $user->id)
-                    ->where('status', 'open');
-            })
-                ->where('donor_profile_id', $profile->id)
-                ->first();
-
-            $data['is_requested']      = (bool) $requested;
-            $data['request_status']    = $requested?->response_status;
-        } else {
-            $data['is_requested']      = null;
-            $data['request_status']    = null;
-        }
-
-        return $data;
-    }
-
     public function index(SearchDonorRequest $request)
     {
         $user  = $this->getOptionalUser();
@@ -57,28 +34,51 @@ class DonorController extends Controller
                     $q->where('id', '!=', $user->id);
                 }
             })
+            ->where('is_available', true)
             ->with(['user:id,name,role']);
 
         if ($request->filled('blood_group')) {
             $query->where('blood_group', $request->blood_group);
         }
-
         if ($request->filled('district')) {
             $query->where('district', 'ilike', '%' . $request->district . '%');
         }
-
         if ($request->filled('division')) {
             $query->where('division', 'ilike', '%' . $request->division . '%');
         }
 
-        if ($request->filled('is_available')) {
-            $query->where('is_available', $request->boolean('is_available'));
-        }
-
         $donors = $query->orderBy('trust_score', 'desc')->paginate(20);
 
-        $data = collect($donors->items())->map(function ($profile) use ($user) {
-            return $this->injectDonorContext($profile, $user);
+        $requestedDonorIds = [];
+        $requestedStatuses = [];
+
+        if ($user) {
+            $recipients = DonationRequestRecipient::whereHas('donationRequest', function ($q) use ($user) {
+                $q->where('requester_user_id', $user->id)
+                    ->where('status', 'open');
+            })
+                ->whereIn('donor_profile_id', collect($donors->items())->pluck('id'))
+                ->get(['donor_profile_id', 'response_status']);
+
+            foreach ($recipients as $r) {
+                $requestedDonorIds[] = $r->donor_profile_id;
+                $requestedStatuses[$r->donor_profile_id] = $r->response_status;
+            }
+        }
+
+        $data = collect($donors->items())->map(function ($profile) use ($user, $requestedDonorIds, $requestedStatuses) {
+            $arr = $profile->toArray();
+
+            if ($user) {
+                $isRequested          = in_array($profile->id, $requestedDonorIds);
+                $arr['is_requested']  = $isRequested;
+                $arr['request_status'] = $isRequested ? $requestedStatuses[$profile->id] : null;
+            } else {
+                $arr['is_requested']  = null;
+                $arr['request_status'] = null;
+            }
+
+            return $arr;
         });
 
         return $this->success([

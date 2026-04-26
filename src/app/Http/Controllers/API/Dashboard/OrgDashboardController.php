@@ -56,12 +56,8 @@ class OrgDashboardController extends Controller
             ->where('organization_id', $org->id)
             ->withCount([
                 'registrations',
-                'registrations as attended_count' => function ($q) {
-                    $q->where('attendance_status', 'attended');
-                },
-                'registrations as absent_count' => function ($q) {
-                    $q->where('attendance_status', 'absent');
-                },
+                'registrations as attended_count' => fn($q) => $q->where('attendance_status', 'attended'),
+                'registrations as absent_count'   => fn($q) => $q->where('attendance_status', 'absent'),
             ])
             ->first();
 
@@ -73,18 +69,16 @@ class OrgDashboardController extends Controller
         ])
             ->where('event_id', $id)
             ->get()
-            ->map(function ($item) {
-                return [
-                    'registration_id'   => $item->id,
-                    'name'              => $item->profile->user->name,
-                    'email'             => $item->profile->user->email,
-                    'blood_group'       => $item->profile->blood_group,
-                    'district'          => $item->profile->district,
-                    'trust_score'       => $item->profile->trust_score,
-                    'attendance_status' => $item->attendance_status,
-                    'registration_date' => $item->registration_date,
-                ];
-            });
+            ->map(fn($item) => [
+                'registration_id'   => $item->id,
+                'name'              => $item->profile->user->name,
+                'email'             => $item->profile->user->email,
+                'blood_group'       => $item->profile->blood_group,
+                'district'          => $item->profile->district,
+                'trust_score'       => $item->profile->trust_score,
+                'attendance_status' => $item->attendance_status,
+                'registration_date' => $item->registration_date,
+            ]);
 
         return $this->success([
             'event'         => $event,

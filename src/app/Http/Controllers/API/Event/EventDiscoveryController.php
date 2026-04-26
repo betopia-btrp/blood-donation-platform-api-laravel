@@ -66,15 +66,44 @@ class EventDiscoveryController extends Controller
         if ($request->filled('district')) {
             $query->where('district', 'ilike', '%' . $request->district . '%');
         }
-
         if ($request->filled('division')) {
             $query->where('division', 'ilike', '%' . $request->division . '%');
         }
 
         $events = $query->orderBy('event_date', 'asc')->paginate(20);
 
-        $data = collect($events->items())->map(function ($event) use ($user) {
-            return $this->injectEventContext($event, $user);
+        $registeredEventIds = [];
+        $registrationData   = [];
+
+        if ($user && $user->profile) {
+            $registrations = EventRegistration::whereIn('event_id', collect($events->items())->pluck('id'))
+                ->where('profile_id', $user->profile->id)
+                ->get(['event_id', 'id', 'attendance_status']);
+
+            foreach ($registrations as $r) {
+                $registeredEventIds[]        = $r->event_id;
+                $registrationData[$r->event_id] = [
+                    'registration_id'   => $r->id,
+                    'attendance_status' => $r->attendance_status,
+                ];
+            }
+        }
+
+        $data = collect($events->items())->map(function ($event) use ($user, $registeredEventIds, $registrationData) {
+            $arr = $event->toArray();
+
+            if ($user && $user->profile) {
+                $isRegistered              = in_array($event->id, $registeredEventIds);
+                $arr['is_registered']      = $isRegistered;
+                $arr['registration_id']    = $isRegistered ? $registrationData[$event->id]['registration_id'] : null;
+                $arr['attendance_status']  = $isRegistered ? $registrationData[$event->id]['attendance_status'] : null;
+            } else {
+                $arr['is_registered']      = null;
+                $arr['registration_id']    = null;
+                $arr['attendance_status']  = null;
+            }
+
+            return $arr;
         });
 
         return $this->success([
