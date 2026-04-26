@@ -101,6 +101,15 @@
                                                                                 <li class="tocify-item level-2" data-unique="endpoints-PUTapi-organization-profile">
                                 <a href="#endpoints-PUTapi-organization-profile">PUT api/organization/profile</a>
                             </li>
+                                                                                <li class="tocify-item level-2" data-unique="endpoints-GETapi-organization-documents">
+                                <a href="#endpoints-GETapi-organization-documents">GET api/organization/documents</a>
+                            </li>
+                                                                                <li class="tocify-item level-2" data-unique="endpoints-POSTapi-organization-documents">
+                                <a href="#endpoints-POSTapi-organization-documents">POST api/organization/documents</a>
+                            </li>
+                                                                                <li class="tocify-item level-2" data-unique="endpoints-DELETEapi-organization-documents--id-">
+                                <a href="#endpoints-DELETEapi-organization-documents--id-">DELETE api/organization/documents/{id}</a>
+                            </li>
                                                                                 <li class="tocify-item level-2" data-unique="endpoints-GETapi-donors">
                                 <a href="#endpoints-GETapi-donors">GET api/donors</a>
                             </li>
@@ -274,7 +283,7 @@
     </ul>
 
     <ul class="toc-footer" id="last-updated">
-        <li>Last updated: April 23, 2026</li>
+        <li>Last updated: April 26, 2026</li>
     </ul>
 </div>
 
@@ -352,7 +361,7 @@ access-control-allow-origin: *
     &quot;success&quot;: true,
     &quot;message&quot;: &quot;API is running&quot;,
     &quot;version&quot;: &quot;1.0.0&quot;,
-    &quot;timestamp&quot;: &quot;2026-04-23T03:46:41.358365Z&quot;
+    &quot;timestamp&quot;: &quot;2026-04-26T04:32:10.592960Z&quot;
 }</code>
  </pre>
     </span>
@@ -446,10 +455,18 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
     --data "{
-    \"name\": \"b\",
-    \"email\": \"zbailey@example.net\",
-    \"password\": \"-0pBNvYgxw\",
-    \"role\": \"user\"
+    \"email\": \"gbailey@example.net\",
+    \"password\": \"+-0pBNvYgxwmi\\/#iw\",
+    \"role\": \"user\",
+    \"name\": \"u\",
+    \"org_name\": \"w\",
+    \"contact_person\": \"p\",
+    \"documents\": [
+        {
+            \"document_type\": \"tax_certificate\",
+            \"document_url\": \"http:\\/\\/www.dare.org\\/iure-odit-et-et-modi-ipsum-nostrum-omnis\"
+        }
+    ]
 }"
 </code></pre></div>
 
@@ -465,10 +482,18 @@ const headers = {
 };
 
 let body = {
-    "name": "b",
-    "email": "zbailey@example.net",
-    "password": "-0pBNvYgxw",
-    "role": "user"
+    "email": "gbailey@example.net",
+    "password": "+-0pBNvYgxwmi\/#iw",
+    "role": "user",
+    "name": "u",
+    "org_name": "w",
+    "contact_person": "p",
+    "documents": [
+        {
+            "document_type": "tax_certificate",
+            "document_url": "http:\/\/www.dare.org\/iure-odit-et-et-modi-ipsum-nostrum-omnis"
+        }
+    ]
 };
 
 fetch(url, {
@@ -554,28 +579,16 @@ You can check the Dev Tools console for debugging information.</code></pre>
             </div>
                                 <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
         <div style=" padding-left: 28px;  clear: unset;">
-            <b style="line-height: 2;"><code>name</code></b>&nbsp;&nbsp;
-<small>string</small>&nbsp;
- &nbsp;
- &nbsp;
-                <input type="text" style="display: none"
-                              name="name"                data-endpoint="POSTapi-auth-register"
-               value="b"
-               data-component="body">
-    <br>
-<p>Must not be greater than 100 characters. Example: <code>b</code></p>
-        </div>
-                <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>email</code></b>&nbsp;&nbsp;
 <small>string</small>&nbsp;
  &nbsp;
  &nbsp;
                 <input type="text" style="display: none"
                               name="email"                data-endpoint="POSTapi-auth-register"
-               value="zbailey@example.net"
+               value="gbailey@example.net"
                data-component="body">
     <br>
-<p>Must be a valid email address. Example: <code>zbailey@example.net</code></p>
+<p>Must be a valid email address. Example: <code>gbailey@example.net</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>password</code></b>&nbsp;&nbsp;
@@ -584,10 +597,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="password"                data-endpoint="POSTapi-auth-register"
-               value="-0pBNvYgxw"
+               value="+-0pBNvYgxwmi/#iw"
                data-component="body">
     <br>
-<p>Must be at least 8 characters. Example: <code>-0pBNvYgxw</code></p>
+<p>Must be at least 8 characters. Example: <code>+-0pBNvYgxwmi/#iw</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>role</code></b>&nbsp;&nbsp;
@@ -602,6 +615,80 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <p>Example: <code>user</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>user</code></li> <li><code>organization</code></li></ul>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>name</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="name"                data-endpoint="POSTapi-auth-register"
+               value="u"
+               data-component="body">
+    <br>
+<p>This field is required when <code>role</code> is <code>user</code>. Must not be greater than 100 characters. Example: <code>u</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>org_name</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="org_name"                data-endpoint="POSTapi-auth-register"
+               value="w"
+               data-component="body">
+    <br>
+<p>This field is required when <code>role</code> is <code>organization</code>. Must not be greater than 150 characters. Example: <code>w</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>contact_person</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="contact_person"                data-endpoint="POSTapi-auth-register"
+               value="p"
+               data-component="body">
+    <br>
+<p>Must not be greater than 100 characters. Example: <code>p</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+        <details>
+            <summary style="padding-bottom: 10px;">
+                <b style="line-height: 2;"><code>documents</code></b>&nbsp;&nbsp;
+<small>object[]</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+<br>
+<p>This field is required when <code>role</code> is <code>organization</code>. Must have at least 1 items.</p>
+            </summary>
+                                                <div style="margin-left: 14px; clear: unset;">
+                        <b style="line-height: 2;"><code>document_type</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="documents.0.document_type"                data-endpoint="POSTapi-auth-register"
+               value="tax_certificate"
+               data-component="body">
+    <br>
+<p>This field is required when <code>role</code> is <code>organization</code>. Example: <code>tax_certificate</code></p>
+Must be one of:
+<ul style="list-style-type: square;"><li><code>trade_license</code></li> <li><code>ngo_certificate</code></li> <li><code>tax_certificate</code></li> <li><code>other</code></li></ul>
+                    </div>
+                                                                <div style="margin-left: 14px; clear: unset;">
+                        <b style="line-height: 2;"><code>document_url</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="documents.0.document_url"                data-endpoint="POSTapi-auth-register"
+               value="http://www.dare.org/iure-odit-et-et-modi-ipsum-nostrum-omnis"
+               data-component="body">
+    <br>
+<p>This field is required when <code>role</code> is <code>organization</code>. Must be a valid URL. Example: <code>http://www.dare.org/iure-odit-et-et-modi-ipsum-nostrum-omnis</code></p>
+                    </div>
+                                    </details>
         </div>
         </form>
 
@@ -1279,12 +1366,12 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
     --data "{
-    \"blood_group\": \"AB+\",
+    \"blood_group\": \"O-\",
     \"division\": \"b\",
     \"district\": \"n\",
     \"area\": \"g\",
     \"is_available\": true,
-    \"last_donation_date\": \"2026-04-23T03:46:43\",
+    \"last_donation_date\": \"2022-05-20\",
     \"avatar_url\": \"http:\\/\\/www.bailey.biz\\/quos-velit-et-fugiat-sunt-nihil-accusantium-harum.html\",
     \"name\": \"i\",
     \"phone\": \"khwaykcmyuwpwlvq\"
@@ -1303,12 +1390,12 @@ const headers = {
 };
 
 let body = {
-    "blood_group": "AB+",
+    "blood_group": "O-",
     "division": "b",
     "district": "n",
     "area": "g",
     "is_available": true,
-    "last_donation_date": "2026-04-23T03:46:43",
+    "last_donation_date": "2022-05-20",
     "avatar_url": "http:\/\/www.bailey.biz\/quos-velit-et-fugiat-sunt-nihil-accusantium-harum.html",
     "name": "i",
     "phone": "khwaykcmyuwpwlvq"
@@ -1403,10 +1490,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="blood_group"                data-endpoint="PUTapi-user-profile"
-               value="AB+"
+               value="O-"
                data-component="body">
     <br>
-<p>Example: <code>AB+</code></p>
+<p>Example: <code>O-</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>A+</code></li> <li><code>A-</code></li> <li><code>B+</code></li> <li><code>B-</code></li> <li><code>O+</code></li> <li><code>O-</code></li> <li><code>AB+</code></li> <li><code>AB-</code></li></ul>
         </div>
@@ -1475,10 +1562,10 @@ Must be one of:
  &nbsp;
                 <input type="text" style="display: none"
                               name="last_donation_date"                data-endpoint="PUTapi-user-profile"
-               value="2026-04-23T03:46:43"
+               value="2022-05-20"
                data-component="body">
     <br>
-<p>Must be a valid date. Example: <code>2026-04-23T03:46:43</code></p>
+<p>Must be a valid date. Must be a date before or equal to <code>today</code>. Example: <code>2022-05-20</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>avatar_url</code></b>&nbsp;&nbsp;
@@ -1819,6 +1906,405 @@ You can check the Dev Tools console for debugging information.</code></pre>
         </div>
         </form>
 
+                    <h2 id="endpoints-GETapi-organization-documents">GET api/organization/documents</h2>
+
+<p>
+</p>
+
+
+
+<span id="example-requests-GETapi-organization-documents">
+<blockquote>Example request:</blockquote>
+
+
+<div class="bash-example">
+    <pre><code class="language-bash">curl --request GET \
+    --get "http://localhost/api/organization/documents" \
+    --header "Content-Type: application/json" \
+    --header "Accept: application/json"</code></pre></div>
+
+
+<div class="javascript-example">
+    <pre><code class="language-javascript">const url = new URL(
+    "http://localhost/api/organization/documents"
+);
+
+const headers = {
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+};
+
+
+fetch(url, {
+    method: "GET",
+    headers,
+}).then(response =&gt; response.json());</code></pre></div>
+
+</span>
+
+<span id="example-responses-GETapi-organization-documents">
+            <blockquote>
+            <p>Example response (401):</p>
+        </blockquote>
+                <details class="annotation">
+            <summary style="cursor: pointer;">
+                <small onclick="textContent = parentElement.parentElement.open ? 'Show headers' : 'Hide headers'">Show headers</small>
+            </summary>
+            <pre><code class="language-http">cache-control: no-cache, private
+content-type: application/json
+access-control-allow-origin: *
+ </code></pre></details>         <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;message&quot;: &quot;Unauthenticated.&quot;
+}</code>
+ </pre>
+    </span>
+<span id="execution-results-GETapi-organization-documents" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-GETapi-organization-documents"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-GETapi-organization-documents"
+      data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
+</span>
+<span id="execution-error-GETapi-organization-documents" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-GETapi-organization-documents">
+
+Tip: Check that you&#039;re properly connected to the network.
+If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
+You can check the Dev Tools console for debugging information.</code></pre>
+</span>
+<form id="form-GETapi-organization-documents" data-method="GET"
+      data-path="api/organization/documents"
+      data-authed="0"
+      data-hasfiles="0"
+      data-isarraybody="0"
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('GETapi-organization-documents', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
+                    <button type="button"
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-GETapi-organization-documents"
+                    onclick="tryItOut('GETapi-organization-documents');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-GETapi-organization-documents"
+                    onclick="cancelTryOut('GETapi-organization-documents');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-GETapi-organization-documents"
+                    data-initial-text="Send Request 💥"
+                    data-loading-text="⏱ Sending..."
+                    hidden>Send Request 💥
+            </button>
+            </h3>
+            <p>
+            <small class="badge badge-green">GET</small>
+            <b><code>api/organization/documents</code></b>
+        </p>
+                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Content-Type"                data-endpoint="GETapi-organization-documents"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Accept"                data-endpoint="GETapi-organization-documents"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                        </form>
+
+                    <h2 id="endpoints-POSTapi-organization-documents">POST api/organization/documents</h2>
+
+<p>
+</p>
+
+
+
+<span id="example-requests-POSTapi-organization-documents">
+<blockquote>Example request:</blockquote>
+
+
+<div class="bash-example">
+    <pre><code class="language-bash">curl --request POST \
+    "http://localhost/api/organization/documents" \
+    --header "Content-Type: application/json" \
+    --header "Accept: application/json" \
+    --data "{
+    \"document_type\": \"ngo_certificate\",
+    \"document_url\": \"http:\\/\\/www.bailey.biz\\/quos-velit-et-fugiat-sunt-nihil-accusantium-harum.html\"
+}"
+</code></pre></div>
+
+
+<div class="javascript-example">
+    <pre><code class="language-javascript">const url = new URL(
+    "http://localhost/api/organization/documents"
+);
+
+const headers = {
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+};
+
+let body = {
+    "document_type": "ngo_certificate",
+    "document_url": "http:\/\/www.bailey.biz\/quos-velit-et-fugiat-sunt-nihil-accusantium-harum.html"
+};
+
+fetch(url, {
+    method: "POST",
+    headers,
+    body: JSON.stringify(body),
+}).then(response =&gt; response.json());</code></pre></div>
+
+</span>
+
+<span id="example-responses-POSTapi-organization-documents">
+</span>
+<span id="execution-results-POSTapi-organization-documents" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-POSTapi-organization-documents"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-POSTapi-organization-documents"
+      data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
+</span>
+<span id="execution-error-POSTapi-organization-documents" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-POSTapi-organization-documents">
+
+Tip: Check that you&#039;re properly connected to the network.
+If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
+You can check the Dev Tools console for debugging information.</code></pre>
+</span>
+<form id="form-POSTapi-organization-documents" data-method="POST"
+      data-path="api/organization/documents"
+      data-authed="0"
+      data-hasfiles="0"
+      data-isarraybody="0"
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('POSTapi-organization-documents', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
+                    <button type="button"
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-POSTapi-organization-documents"
+                    onclick="tryItOut('POSTapi-organization-documents');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-POSTapi-organization-documents"
+                    onclick="cancelTryOut('POSTapi-organization-documents');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-POSTapi-organization-documents"
+                    data-initial-text="Send Request 💥"
+                    data-loading-text="⏱ Sending..."
+                    hidden>Send Request 💥
+            </button>
+            </h3>
+            <p>
+            <small class="badge badge-black">POST</small>
+            <b><code>api/organization/documents</code></b>
+        </p>
+                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Content-Type"                data-endpoint="POSTapi-organization-documents"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Accept"                data-endpoint="POSTapi-organization-documents"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
+        <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>document_type</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="document_type"                data-endpoint="POSTapi-organization-documents"
+               value="ngo_certificate"
+               data-component="body">
+    <br>
+<p>Example: <code>ngo_certificate</code></p>
+Must be one of:
+<ul style="list-style-type: square;"><li><code>trade_license</code></li> <li><code>ngo_certificate</code></li> <li><code>tax_certificate</code></li> <li><code>other</code></li></ul>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>document_url</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="document_url"                data-endpoint="POSTapi-organization-documents"
+               value="http://www.bailey.biz/quos-velit-et-fugiat-sunt-nihil-accusantium-harum.html"
+               data-component="body">
+    <br>
+<p>Must be a valid URL. Example: <code>http://www.bailey.biz/quos-velit-et-fugiat-sunt-nihil-accusantium-harum.html</code></p>
+        </div>
+        </form>
+
+                    <h2 id="endpoints-DELETEapi-organization-documents--id-">DELETE api/organization/documents/{id}</h2>
+
+<p>
+</p>
+
+
+
+<span id="example-requests-DELETEapi-organization-documents--id-">
+<blockquote>Example request:</blockquote>
+
+
+<div class="bash-example">
+    <pre><code class="language-bash">curl --request DELETE \
+    "http://localhost/api/organization/documents/architecto" \
+    --header "Content-Type: application/json" \
+    --header "Accept: application/json"</code></pre></div>
+
+
+<div class="javascript-example">
+    <pre><code class="language-javascript">const url = new URL(
+    "http://localhost/api/organization/documents/architecto"
+);
+
+const headers = {
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+};
+
+
+fetch(url, {
+    method: "DELETE",
+    headers,
+}).then(response =&gt; response.json());</code></pre></div>
+
+</span>
+
+<span id="example-responses-DELETEapi-organization-documents--id-">
+</span>
+<span id="execution-results-DELETEapi-organization-documents--id-" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-DELETEapi-organization-documents--id-"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-DELETEapi-organization-documents--id-"
+      data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
+</span>
+<span id="execution-error-DELETEapi-organization-documents--id-" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-DELETEapi-organization-documents--id-">
+
+Tip: Check that you&#039;re properly connected to the network.
+If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
+You can check the Dev Tools console for debugging information.</code></pre>
+</span>
+<form id="form-DELETEapi-organization-documents--id-" data-method="DELETE"
+      data-path="api/organization/documents/{id}"
+      data-authed="0"
+      data-hasfiles="0"
+      data-isarraybody="0"
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('DELETEapi-organization-documents--id-', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
+                    <button type="button"
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-DELETEapi-organization-documents--id-"
+                    onclick="tryItOut('DELETEapi-organization-documents--id-');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-DELETEapi-organization-documents--id-"
+                    onclick="cancelTryOut('DELETEapi-organization-documents--id-');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-DELETEapi-organization-documents--id-"
+                    data-initial-text="Send Request 💥"
+                    data-loading-text="⏱ Sending..."
+                    hidden>Send Request 💥
+            </button>
+            </h3>
+            <p>
+            <small class="badge badge-red">DELETE</small>
+            <b><code>api/organization/documents/{id}</code></b>
+        </p>
+                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Content-Type"                data-endpoint="DELETEapi-organization-documents--id-"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Accept"                data-endpoint="DELETEapi-organization-documents--id-"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                        <h4 class="fancy-heading-panel"><b>URL Parameters</b></h4>
+                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>id</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="id"                data-endpoint="DELETEapi-organization-documents--id-"
+               value="architecto"
+               data-component="url">
+    <br>
+<p>The ID of the document. Example: <code>architecto</code></p>
+            </div>
+                    </form>
+
                     <h2 id="endpoints-GETapi-donors">GET api/donors</h2>
 
 <p>
@@ -1836,10 +2322,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
     --data "{
-    \"blood_group\": \"B-\",
+    \"blood_group\": \"B+\",
     \"district\": \"b\",
     \"division\": \"n\",
-    \"is_available\": false
+    \"is_available\": true
 }"
 </code></pre></div>
 
@@ -1855,10 +2341,10 @@ const headers = {
 };
 
 let body = {
-    "blood_group": "B-",
+    "blood_group": "B+",
     "district": "b",
     "division": "n",
-    "is_available": false
+    "is_available": true
 };
 
 fetch(url, {
@@ -1973,10 +2459,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="blood_group"                data-endpoint="GETapi-donors"
-               value="B-"
+               value="B+"
                data-component="body">
     <br>
-<p>Example: <code>B-</code></p>
+<p>Example: <code>B+</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>A+</code></li> <li><code>A-</code></li> <li><code>B+</code></li> <li><code>B-</code></li> <li><code>O+</code></li> <li><code>O-</code></li> <li><code>AB+</code></li> <li><code>AB-</code></li></ul>
         </div>
@@ -2024,7 +2510,7 @@ Must be one of:
             <code>false</code>
         </label>
     <br>
-<p>Example: <code>false</code></p>
+<p>Example: <code>true</code></p>
         </div>
         </form>
 
@@ -2221,10 +2707,356 @@ access-control-allow-origin: *
     &quot;success&quot;: true,
     &quot;message&quot;: &quot;Events retrieved&quot;,
     &quot;data&quot;: {
-        &quot;events&quot;: [],
+        &quot;events&quot;: [
+            {
+                &quot;id&quot;: 8,
+                &quot;organization_id&quot;: 3,
+                &quot;title&quot;: &quot;Aliquid consequatur non ut omnis.&quot;,
+                &quot;description&quot;: &quot;Quas odio quibusdam molestiae neque. Aut hic minus animi vitae ut dolore adipisci. Non in et neque. Quisquam assumenda architecto velit.&quot;,
+                &quot;event_date&quot;: &quot;2026-05-02 11:59:32&quot;,
+                &quot;location&quot;: &quot;37809 Tommie Club Apt. 927\nNorth Mathildehaven, MA 09134&quot;,
+                &quot;district&quot;: &quot;Gazipur&quot;,
+                &quot;division&quot;: &quot;Sylhet&quot;,
+                &quot;max_capacity&quot;: 69,
+                &quot;banner_image&quot;: null,
+                &quot;status&quot;: &quot;upcoming&quot;,
+                &quot;created_at&quot;: &quot;2026-04-25T05:26:50.000000Z&quot;,
+                &quot;updated_at&quot;: &quot;2026-04-25T05:26:50.000000Z&quot;,
+                &quot;registrations_count&quot;: 10,
+                &quot;organization&quot;: {
+                    &quot;id&quot;: 3,
+                    &quot;org_name&quot;: &quot;Hilma Kuvalis Foundation&quot;
+                },
+                &quot;is_registered&quot;: null,
+                &quot;registration_id&quot;: null,
+                &quot;attendance_status&quot;: null
+            },
+            {
+                &quot;id&quot;: 10,
+                &quot;organization_id&quot;: 4,
+                &quot;title&quot;: &quot;Quia sed voluptatem sint animi.&quot;,
+                &quot;description&quot;: &quot;Atque dolor similique quae voluptas autem id a nisi. Beatae neque autem eveniet consequatur et deserunt ipsum. Dolore eaque beatae dolores aut. Neque voluptatem accusantium quo ea exercitationem illo.&quot;,
+                &quot;event_date&quot;: &quot;2026-05-11 07:46:58&quot;,
+                &quot;location&quot;: &quot;50984 Micheal Light Apt. 884\nMacieland, IN 91993&quot;,
+                &quot;district&quot;: &quot;Dhaka&quot;,
+                &quot;division&quot;: &quot;Sylhet&quot;,
+                &quot;max_capacity&quot;: 170,
+                &quot;banner_image&quot;: null,
+                &quot;status&quot;: &quot;upcoming&quot;,
+                &quot;created_at&quot;: &quot;2026-04-25T05:26:50.000000Z&quot;,
+                &quot;updated_at&quot;: &quot;2026-04-25T05:26:50.000000Z&quot;,
+                &quot;registrations_count&quot;: 10,
+                &quot;organization&quot;: {
+                    &quot;id&quot;: 4,
+                    &quot;org_name&quot;: &quot;Mariela O&#039;Conner Foundation&quot;
+                },
+                &quot;is_registered&quot;: null,
+                &quot;registration_id&quot;: null,
+                &quot;attendance_status&quot;: null
+            },
+            {
+                &quot;id&quot;: 12,
+                &quot;organization_id&quot;: 4,
+                &quot;title&quot;: &quot;Corporis id velit iste totam.&quot;,
+                &quot;description&quot;: &quot;Molestias aliquid necessitatibus exercitationem. Nostrum incidunt laborum fugiat ut esse consequuntur. Dolor vero accusantium sit suscipit. Esse accusantium aut eum asperiores earum natus.&quot;,
+                &quot;event_date&quot;: &quot;2026-05-20 19:46:22&quot;,
+                &quot;location&quot;: &quot;312 Enos Stream Suite 704\nWest Rahsaanville, MT 16198&quot;,
+                &quot;district&quot;: &quot;Chittagong&quot;,
+                &quot;division&quot;: &quot;Dhaka&quot;,
+                &quot;max_capacity&quot;: 156,
+                &quot;banner_image&quot;: null,
+                &quot;status&quot;: &quot;upcoming&quot;,
+                &quot;created_at&quot;: &quot;2026-04-25T05:26:50.000000Z&quot;,
+                &quot;updated_at&quot;: &quot;2026-04-25T05:26:50.000000Z&quot;,
+                &quot;registrations_count&quot;: 10,
+                &quot;organization&quot;: {
+                    &quot;id&quot;: 4,
+                    &quot;org_name&quot;: &quot;Mariela O&#039;Conner Foundation&quot;
+                },
+                &quot;is_registered&quot;: null,
+                &quot;registration_id&quot;: null,
+                &quot;attendance_status&quot;: null
+            },
+            {
+                &quot;id&quot;: 7,
+                &quot;organization_id&quot;: 3,
+                &quot;title&quot;: &quot;Nisi quod sit quaerat doloremque.&quot;,
+                &quot;description&quot;: &quot;Dolorum aut rerum totam a facilis quae. Officia aut ipsam velit ut repellendus modi. Distinctio quia eum distinctio adipisci repellendus voluptate officia. Laboriosam in eos dolores doloribus omnis et.&quot;,
+                &quot;event_date&quot;: &quot;2026-05-23 13:48:21&quot;,
+                &quot;location&quot;: &quot;434 Elroy Causeway Suite 460\nMonserratfort, VT 06935&quot;,
+                &quot;district&quot;: &quot;Chittagong&quot;,
+                &quot;division&quot;: &quot;Khulna&quot;,
+                &quot;max_capacity&quot;: 103,
+                &quot;banner_image&quot;: null,
+                &quot;status&quot;: &quot;upcoming&quot;,
+                &quot;created_at&quot;: &quot;2026-04-25T05:26:50.000000Z&quot;,
+                &quot;updated_at&quot;: &quot;2026-04-25T05:26:50.000000Z&quot;,
+                &quot;registrations_count&quot;: 10,
+                &quot;organization&quot;: {
+                    &quot;id&quot;: 3,
+                    &quot;org_name&quot;: &quot;Hilma Kuvalis Foundation&quot;
+                },
+                &quot;is_registered&quot;: null,
+                &quot;registration_id&quot;: null,
+                &quot;attendance_status&quot;: null
+            },
+            {
+                &quot;id&quot;: 6,
+                &quot;organization_id&quot;: 2,
+                &quot;title&quot;: &quot;Dolore velit reiciendis autem voluptate.&quot;,
+                &quot;description&quot;: &quot;Neque aut voluptatibus facere molestias culpa ipsa debitis dolor. Occaecati optio debitis soluta esse. Numquam quos vel molestiae recusandae assumenda.&quot;,
+                &quot;event_date&quot;: &quot;2026-06-04 02:38:55&quot;,
+                &quot;location&quot;: &quot;639 Rosalinda Village\nPort Vilma, IA 33653&quot;,
+                &quot;district&quot;: &quot;Dhaka&quot;,
+                &quot;division&quot;: &quot;Chittagong&quot;,
+                &quot;max_capacity&quot;: 137,
+                &quot;banner_image&quot;: null,
+                &quot;status&quot;: &quot;upcoming&quot;,
+                &quot;created_at&quot;: &quot;2026-04-25T05:26:50.000000Z&quot;,
+                &quot;updated_at&quot;: &quot;2026-04-25T05:26:50.000000Z&quot;,
+                &quot;registrations_count&quot;: 10,
+                &quot;organization&quot;: {
+                    &quot;id&quot;: 2,
+                    &quot;org_name&quot;: &quot;Gennaro O&#039;Conner DVM Foundation&quot;
+                },
+                &quot;is_registered&quot;: null,
+                &quot;registration_id&quot;: null,
+                &quot;attendance_status&quot;: null
+            },
+            {
+                &quot;id&quot;: 4,
+                &quot;organization_id&quot;: 2,
+                &quot;title&quot;: &quot;Ducimus quasi similique amet.&quot;,
+                &quot;description&quot;: &quot;Omnis voluptatem et qui sit occaecati veritatis et. Optio eos molestiae voluptatem temporibus. Occaecati adipisci architecto quia autem.&quot;,
+                &quot;event_date&quot;: &quot;2026-06-09 06:49:01&quot;,
+                &quot;location&quot;: &quot;29631 Hyatt Estates\nCassinburgh, AK 61325-7701&quot;,
+                &quot;district&quot;: &quot;Khulna&quot;,
+                &quot;division&quot;: &quot;Sylhet&quot;,
+                &quot;max_capacity&quot;: 60,
+                &quot;banner_image&quot;: null,
+                &quot;status&quot;: &quot;upcoming&quot;,
+                &quot;created_at&quot;: &quot;2026-04-25T05:26:50.000000Z&quot;,
+                &quot;updated_at&quot;: &quot;2026-04-25T05:26:50.000000Z&quot;,
+                &quot;registrations_count&quot;: 10,
+                &quot;organization&quot;: {
+                    &quot;id&quot;: 2,
+                    &quot;org_name&quot;: &quot;Gennaro O&#039;Conner DVM Foundation&quot;
+                },
+                &quot;is_registered&quot;: null,
+                &quot;registration_id&quot;: null,
+                &quot;attendance_status&quot;: null
+            },
+            {
+                &quot;id&quot;: 9,
+                &quot;organization_id&quot;: 3,
+                &quot;title&quot;: &quot;Aliquid necessitatibus quia nesciunt.&quot;,
+                &quot;description&quot;: &quot;Architecto libero pariatur neque qui. Accusantium modi ut et est velit quo labore. Iste tempore est modi id.&quot;,
+                &quot;event_date&quot;: &quot;2026-06-20 02:43:38&quot;,
+                &quot;location&quot;: &quot;753 Kelsie Mountains\nPort Hettieview, KY 98723-0969&quot;,
+                &quot;district&quot;: &quot;Rajshahi&quot;,
+                &quot;division&quot;: &quot;Rajshahi&quot;,
+                &quot;max_capacity&quot;: 74,
+                &quot;banner_image&quot;: null,
+                &quot;status&quot;: &quot;upcoming&quot;,
+                &quot;created_at&quot;: &quot;2026-04-25T05:26:50.000000Z&quot;,
+                &quot;updated_at&quot;: &quot;2026-04-25T05:26:50.000000Z&quot;,
+                &quot;registrations_count&quot;: 10,
+                &quot;organization&quot;: {
+                    &quot;id&quot;: 3,
+                    &quot;org_name&quot;: &quot;Hilma Kuvalis Foundation&quot;
+                },
+                &quot;is_registered&quot;: null,
+                &quot;registration_id&quot;: null,
+                &quot;attendance_status&quot;: null
+            },
+            {
+                &quot;id&quot;: 2,
+                &quot;organization_id&quot;: 1,
+                &quot;title&quot;: &quot;Ea dolores ipsa.&quot;,
+                &quot;description&quot;: &quot;Laudantium sit nemo et incidunt. Harum iure dolorum voluptas sapiente. Numquam quis a est autem maiores. Animi sint esse in fugit aut qui.&quot;,
+                &quot;event_date&quot;: &quot;2026-06-21 23:26:16&quot;,
+                &quot;location&quot;: &quot;768 Nasir Crossroad\nEast Adolphus, UT 83052-0404&quot;,
+                &quot;district&quot;: &quot;Rajshahi&quot;,
+                &quot;division&quot;: &quot;Rajshahi&quot;,
+                &quot;max_capacity&quot;: 115,
+                &quot;banner_image&quot;: null,
+                &quot;status&quot;: &quot;upcoming&quot;,
+                &quot;created_at&quot;: &quot;2026-04-25T05:26:50.000000Z&quot;,
+                &quot;updated_at&quot;: &quot;2026-04-25T05:26:50.000000Z&quot;,
+                &quot;registrations_count&quot;: 10,
+                &quot;organization&quot;: {
+                    &quot;id&quot;: 1,
+                    &quot;org_name&quot;: &quot;Prof. Delilah Rippin Foundation&quot;
+                },
+                &quot;is_registered&quot;: null,
+                &quot;registration_id&quot;: null,
+                &quot;attendance_status&quot;: null
+            },
+            {
+                &quot;id&quot;: 14,
+                &quot;organization_id&quot;: 5,
+                &quot;title&quot;: &quot;Et suscipit facilis vel qui.&quot;,
+                &quot;description&quot;: &quot;Rerum voluptatum veritatis autem dolor nesciunt vel labore. Ipsum architecto non perspiciatis hic dolor quidem ipsam. Eveniet pariatur adipisci deserunt rerum repellat.&quot;,
+                &quot;event_date&quot;: &quot;2026-06-23 05:42:40&quot;,
+                &quot;location&quot;: &quot;9639 Hackett Unions Suite 049\nRosettaton, MD 43893-9832&quot;,
+                &quot;district&quot;: &quot;Chittagong&quot;,
+                &quot;division&quot;: &quot;Dhaka&quot;,
+                &quot;max_capacity&quot;: 126,
+                &quot;banner_image&quot;: null,
+                &quot;status&quot;: &quot;upcoming&quot;,
+                &quot;created_at&quot;: &quot;2026-04-25T05:26:50.000000Z&quot;,
+                &quot;updated_at&quot;: &quot;2026-04-25T05:26:50.000000Z&quot;,
+                &quot;registrations_count&quot;: 10,
+                &quot;organization&quot;: {
+                    &quot;id&quot;: 5,
+                    &quot;org_name&quot;: &quot;Dr. Tom Romaguera DVM Foundation&quot;
+                },
+                &quot;is_registered&quot;: null,
+                &quot;registration_id&quot;: null,
+                &quot;attendance_status&quot;: null
+            },
+            {
+                &quot;id&quot;: 1,
+                &quot;organization_id&quot;: 1,
+                &quot;title&quot;: &quot;Eos eos voluptatum.&quot;,
+                &quot;description&quot;: &quot;Repellat odio ipsa incidunt dignissimos qui reprehenderit. Dolor et ut consequatur nihil odio quas. Aliquam eos minima nobis debitis esse id.&quot;,
+                &quot;event_date&quot;: &quot;2026-07-03 22:47:05&quot;,
+                &quot;location&quot;: &quot;543 Jermain Street\nWest Sarinafort, IN 98521&quot;,
+                &quot;district&quot;: &quot;Gazipur&quot;,
+                &quot;division&quot;: &quot;Khulna&quot;,
+                &quot;max_capacity&quot;: 184,
+                &quot;banner_image&quot;: null,
+                &quot;status&quot;: &quot;upcoming&quot;,
+                &quot;created_at&quot;: &quot;2026-04-25T05:26:50.000000Z&quot;,
+                &quot;updated_at&quot;: &quot;2026-04-25T05:26:50.000000Z&quot;,
+                &quot;registrations_count&quot;: 10,
+                &quot;organization&quot;: {
+                    &quot;id&quot;: 1,
+                    &quot;org_name&quot;: &quot;Prof. Delilah Rippin Foundation&quot;
+                },
+                &quot;is_registered&quot;: null,
+                &quot;registration_id&quot;: null,
+                &quot;attendance_status&quot;: null
+            },
+            {
+                &quot;id&quot;: 15,
+                &quot;organization_id&quot;: 5,
+                &quot;title&quot;: &quot;Hic aut saepe illum dignissimos.&quot;,
+                &quot;description&quot;: &quot;Minus non non dolores quas. Qui sed voluptas voluptatem est minima modi. Culpa dolorem molestiae cum quos quis non nemo.&quot;,
+                &quot;event_date&quot;: &quot;2026-07-09 05:03:37&quot;,
+                &quot;location&quot;: &quot;7351 Christian Neck Apt. 257\nAsiaville, IL 81489-0504&quot;,
+                &quot;district&quot;: &quot;Gazipur&quot;,
+                &quot;division&quot;: &quot;Khulna&quot;,
+                &quot;max_capacity&quot;: 100,
+                &quot;banner_image&quot;: null,
+                &quot;status&quot;: &quot;upcoming&quot;,
+                &quot;created_at&quot;: &quot;2026-04-25T05:26:50.000000Z&quot;,
+                &quot;updated_at&quot;: &quot;2026-04-25T05:26:50.000000Z&quot;,
+                &quot;registrations_count&quot;: 10,
+                &quot;organization&quot;: {
+                    &quot;id&quot;: 5,
+                    &quot;org_name&quot;: &quot;Dr. Tom Romaguera DVM Foundation&quot;
+                },
+                &quot;is_registered&quot;: null,
+                &quot;registration_id&quot;: null,
+                &quot;attendance_status&quot;: null
+            },
+            {
+                &quot;id&quot;: 13,
+                &quot;organization_id&quot;: 5,
+                &quot;title&quot;: &quot;Hic eum est facilis cum nulla.&quot;,
+                &quot;description&quot;: &quot;Ducimus et repellat molestias sed commodi. Occaecati velit eveniet non adipisci. Accusamus quo eligendi qui adipisci dolores molestiae aut. Fugit assumenda odio minus voluptates.&quot;,
+                &quot;event_date&quot;: &quot;2026-07-15 18:35:00&quot;,
+                &quot;location&quot;: &quot;22294 Kolby Station Apt. 488\nSouth Laurenceport, WA 96761-1412&quot;,
+                &quot;district&quot;: &quot;Gazipur&quot;,
+                &quot;division&quot;: &quot;Sylhet&quot;,
+                &quot;max_capacity&quot;: 193,
+                &quot;banner_image&quot;: null,
+                &quot;status&quot;: &quot;upcoming&quot;,
+                &quot;created_at&quot;: &quot;2026-04-25T05:26:50.000000Z&quot;,
+                &quot;updated_at&quot;: &quot;2026-04-25T05:26:50.000000Z&quot;,
+                &quot;registrations_count&quot;: 10,
+                &quot;organization&quot;: {
+                    &quot;id&quot;: 5,
+                    &quot;org_name&quot;: &quot;Dr. Tom Romaguera DVM Foundation&quot;
+                },
+                &quot;is_registered&quot;: null,
+                &quot;registration_id&quot;: null,
+                &quot;attendance_status&quot;: null
+            },
+            {
+                &quot;id&quot;: 5,
+                &quot;organization_id&quot;: 2,
+                &quot;title&quot;: &quot;Cum et odio tempora.&quot;,
+                &quot;description&quot;: &quot;Doloremque omnis numquam incidunt et natus sunt odio tempore. Neque adipisci repudiandae odio ab asperiores illo. Sed asperiores ut quo id aut. Optio ut eligendi nihil ea quis sit cumque sint.&quot;,
+                &quot;event_date&quot;: &quot;2026-07-18 00:53:29&quot;,
+                &quot;location&quot;: &quot;15919 Lemke Mount Apt. 149\nNorth Thaddeus, KY 99584&quot;,
+                &quot;district&quot;: &quot;Rajshahi&quot;,
+                &quot;division&quot;: &quot;Chittagong&quot;,
+                &quot;max_capacity&quot;: 108,
+                &quot;banner_image&quot;: null,
+                &quot;status&quot;: &quot;upcoming&quot;,
+                &quot;created_at&quot;: &quot;2026-04-25T05:26:50.000000Z&quot;,
+                &quot;updated_at&quot;: &quot;2026-04-25T05:26:50.000000Z&quot;,
+                &quot;registrations_count&quot;: 10,
+                &quot;organization&quot;: {
+                    &quot;id&quot;: 2,
+                    &quot;org_name&quot;: &quot;Gennaro O&#039;Conner DVM Foundation&quot;
+                },
+                &quot;is_registered&quot;: null,
+                &quot;registration_id&quot;: null,
+                &quot;attendance_status&quot;: null
+            },
+            {
+                &quot;id&quot;: 11,
+                &quot;organization_id&quot;: 4,
+                &quot;title&quot;: &quot;Et aut saepe ipsum.&quot;,
+                &quot;description&quot;: &quot;Quod fugiat laboriosam laborum placeat eum. Aut eius ratione ratione. Qui est vitae asperiores reprehenderit voluptatem deleniti. Qui dolor repellendus aperiam voluptatibus.&quot;,
+                &quot;event_date&quot;: &quot;2026-07-19 02:47:24&quot;,
+                &quot;location&quot;: &quot;3735 Wiza Hollow Suite 748\nWest Jorgeport, CT 35229-9208&quot;,
+                &quot;district&quot;: &quot;Gazipur&quot;,
+                &quot;division&quot;: &quot;Rajshahi&quot;,
+                &quot;max_capacity&quot;: 145,
+                &quot;banner_image&quot;: null,
+                &quot;status&quot;: &quot;upcoming&quot;,
+                &quot;created_at&quot;: &quot;2026-04-25T05:26:50.000000Z&quot;,
+                &quot;updated_at&quot;: &quot;2026-04-25T05:26:50.000000Z&quot;,
+                &quot;registrations_count&quot;: 10,
+                &quot;organization&quot;: {
+                    &quot;id&quot;: 4,
+                    &quot;org_name&quot;: &quot;Mariela O&#039;Conner Foundation&quot;
+                },
+                &quot;is_registered&quot;: null,
+                &quot;registration_id&quot;: null,
+                &quot;attendance_status&quot;: null
+            },
+            {
+                &quot;id&quot;: 3,
+                &quot;organization_id&quot;: 1,
+                &quot;title&quot;: &quot;Et adipisci aperiam quia asperiores a.&quot;,
+                &quot;description&quot;: &quot;Doloremque cum sit quia nam est architecto dolor tempora. Quia ipsam quae sunt est ab. Et et tenetur ab accusamus veniam nisi blanditiis.&quot;,
+                &quot;event_date&quot;: &quot;2026-07-20 08:38:32&quot;,
+                &quot;location&quot;: &quot;85115 Layla Rapid Suite 333\nSchmelerfurt, NE 05969-1030&quot;,
+                &quot;district&quot;: &quot;Khulna&quot;,
+                &quot;division&quot;: &quot;Chittagong&quot;,
+                &quot;max_capacity&quot;: 52,
+                &quot;banner_image&quot;: null,
+                &quot;status&quot;: &quot;upcoming&quot;,
+                &quot;created_at&quot;: &quot;2026-04-25T05:26:50.000000Z&quot;,
+                &quot;updated_at&quot;: &quot;2026-04-25T05:26:50.000000Z&quot;,
+                &quot;registrations_count&quot;: 10,
+                &quot;organization&quot;: {
+                    &quot;id&quot;: 1,
+                    &quot;org_name&quot;: &quot;Prof. Delilah Rippin Foundation&quot;
+                },
+                &quot;is_registered&quot;: null,
+                &quot;registration_id&quot;: null,
+                &quot;attendance_status&quot;: null
+            }
+        ],
         &quot;current_page&quot;: 1,
         &quot;last_page&quot;: 1,
-        &quot;total&quot;: 0
+        &quot;total&quot;: 15
     }
 }</code>
  </pre>
@@ -2315,14 +3147,14 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://localhost/api/events/16" \
+    --get "http://localhost/api/events/1" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
 
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost/api/events/16"
+    "http://localhost/api/events/1"
 );
 
 const headers = {
@@ -2340,7 +3172,7 @@ fetch(url, {
 
 <span id="example-responses-GETapi-events--id-">
             <blockquote>
-            <p>Example response (404):</p>
+            <p>Example response (200):</p>
         </blockquote>
                 <details class="annotation">
             <summary style="cursor: pointer;">
@@ -2352,9 +3184,31 @@ access-control-allow-origin: *
  </code></pre></details>         <pre>
 
 <code class="language-json" style="max-height: 300px;">{
-    &quot;success&quot;: false,
-    &quot;message&quot;: &quot;Event not found&quot;,
-    &quot;data&quot;: null
+    &quot;success&quot;: true,
+    &quot;message&quot;: &quot;Event details retrieved&quot;,
+    &quot;data&quot;: {
+        &quot;id&quot;: 1,
+        &quot;organization_id&quot;: 1,
+        &quot;title&quot;: &quot;Eos eos voluptatum.&quot;,
+        &quot;description&quot;: &quot;Repellat odio ipsa incidunt dignissimos qui reprehenderit. Dolor et ut consequatur nihil odio quas. Aliquam eos minima nobis debitis esse id.&quot;,
+        &quot;event_date&quot;: &quot;2026-07-03 22:47:05&quot;,
+        &quot;location&quot;: &quot;543 Jermain Street\nWest Sarinafort, IN 98521&quot;,
+        &quot;district&quot;: &quot;Gazipur&quot;,
+        &quot;division&quot;: &quot;Khulna&quot;,
+        &quot;max_capacity&quot;: 184,
+        &quot;banner_image&quot;: null,
+        &quot;status&quot;: &quot;upcoming&quot;,
+        &quot;created_at&quot;: &quot;2026-04-25T05:26:50.000000Z&quot;,
+        &quot;updated_at&quot;: &quot;2026-04-25T05:26:50.000000Z&quot;,
+        &quot;registrations_count&quot;: 10,
+        &quot;organization&quot;: {
+            &quot;id&quot;: 1,
+            &quot;org_name&quot;: &quot;Prof. Delilah Rippin Foundation&quot;
+        },
+        &quot;is_registered&quot;: null,
+        &quot;registration_id&quot;: null,
+        &quot;attendance_status&quot;: null
+    }
 }</code>
  </pre>
     </span>
@@ -2437,10 +3291,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="number" style="display: none"
                step="any"               name="id"                data-endpoint="GETapi-events--id-"
-               value="16"
+               value="1"
                data-component="url">
     <br>
-<p>The ID of the event. Example: <code>16</code></p>
+<p>The ID of the event. Example: <code>1</code></p>
             </div>
                     </form>
 
@@ -2457,14 +3311,14 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request POST \
-    "http://localhost/api/events/16/register" \
+    "http://localhost/api/events/1/register" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
 
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost/api/events/16/register"
+    "http://localhost/api/events/1/register"
 );
 
 const headers = {
@@ -2561,10 +3415,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="number" style="display: none"
                step="any"               name="id"                data-endpoint="POSTapi-events--id--register"
-               value="16"
+               value="1"
                data-component="url">
     <br>
-<p>The ID of the event. Example: <code>16</code></p>
+<p>The ID of the event. Example: <code>1</code></p>
             </div>
                     </form>
 
@@ -2581,14 +3435,14 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request DELETE \
-    "http://localhost/api/events/16/register" \
+    "http://localhost/api/events/1/register" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
 
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost/api/events/16/register"
+    "http://localhost/api/events/1/register"
 );
 
 const headers = {
@@ -2685,10 +3539,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="number" style="display: none"
                step="any"               name="id"                data-endpoint="DELETEapi-events--id--register"
-               value="16"
+               value="1"
                data-component="url">
     <br>
-<p>The ID of the event. Example: <code>16</code></p>
+<p>The ID of the event. Example: <code>1</code></p>
             </div>
                     </form>
 
@@ -2705,11 +3559,11 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request POST \
-    "http://localhost/api/events/16/report" \
+    "http://localhost/api/events/1/report" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
     --data "{
-    \"report_type\": \"fake\",
+    \"report_type\": \"spam\",
     \"reason\": \"architecto\"
 }"
 </code></pre></div>
@@ -2717,7 +3571,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost/api/events/16/report"
+    "http://localhost/api/events/1/report"
 );
 
 const headers = {
@@ -2726,7 +3580,7 @@ const headers = {
 };
 
 let body = {
-    "report_type": "fake",
+    "report_type": "spam",
     "reason": "architecto"
 };
 
@@ -2819,10 +3673,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="number" style="display: none"
                step="any"               name="id"                data-endpoint="POSTapi-events--id--report"
-               value="16"
+               value="1"
                data-component="url">
     <br>
-<p>The ID of the event. Example: <code>16</code></p>
+<p>The ID of the event. Example: <code>1</code></p>
             </div>
                             <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
         <div style=" padding-left: 28px;  clear: unset;">
@@ -2832,10 +3686,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="report_type"                data-endpoint="POSTapi-events--id--report"
-               value="fake"
+               value="spam"
                data-component="body">
     <br>
-<p>Example: <code>fake</code></p>
+<p>Example: <code>spam</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>spam</code></li> <li><code>fake</code></li> <li><code>abusive</code></li> <li><code>other</code></li></ul>
         </div>
@@ -2870,7 +3724,7 @@ Must be one of:
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
     --data "{
-    \"blood_group\": \"B+\",
+    \"blood_group\": \"A+\",
     \"quantity\": 16,
     \"hospital_name\": \"n\",
     \"division\": \"g\",
@@ -2878,7 +3732,7 @@ Must be one of:
     \"area\": \"m\",
     \"location\": \"architecto\",
     \"note\": \"architecto\",
-    \"needed_at\": \"2026-04-23T03:46:44\",
+    \"needed_at\": \"2026-04-26T04:32:13\",
     \"donor_ids\": [
         16
     ]
@@ -2897,7 +3751,7 @@ const headers = {
 };
 
 let body = {
-    "blood_group": "B+",
+    "blood_group": "A+",
     "quantity": 16,
     "hospital_name": "n",
     "division": "g",
@@ -2905,7 +3759,7 @@ let body = {
     "area": "m",
     "location": "architecto",
     "note": "architecto",
-    "needed_at": "2026-04-23T03:46:44",
+    "needed_at": "2026-04-26T04:32:13",
     "donor_ids": [
         16
     ]
@@ -3000,10 +3854,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="blood_group"                data-endpoint="POSTapi-donation-requests"
-               value="B+"
+               value="A+"
                data-component="body">
     <br>
-<p>Example: <code>B+</code></p>
+<p>Example: <code>A+</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>A+</code></li> <li><code>A-</code></li> <li><code>B+</code></li> <li><code>B-</code></li> <li><code>O+</code></li> <li><code>O-</code></li> <li><code>AB+</code></li> <li><code>AB-</code></li></ul>
         </div>
@@ -3098,10 +3952,10 @@ Must be one of:
  &nbsp;
                 <input type="text" style="display: none"
                               name="needed_at"                data-endpoint="POSTapi-donation-requests"
-               value="2026-04-23T03:46:44"
+               value="2026-04-26T04:32:13"
                data-component="body">
     <br>
-<p>Must be a valid date. Example: <code>2026-04-23T03:46:44</code></p>
+<p>Must be a valid date. Example: <code>2026-04-26T04:32:13</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>donor_ids</code></b>&nbsp;&nbsp;
@@ -5589,14 +6443,14 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://localhost/api/dashboard/org/events/16" \
+    --get "http://localhost/api/dashboard/org/events/1" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
 
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost/api/dashboard/org/events/16"
+    "http://localhost/api/dashboard/org/events/1"
 );
 
 const headers = {
@@ -5709,10 +6563,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="number" style="display: none"
                step="any"               name="id"                data-endpoint="GETapi-dashboard-org-events--id-"
-               value="16"
+               value="1"
                data-component="url">
     <br>
-<p>The ID of the event. Example: <code>16</code></p>
+<p>The ID of the event. Example: <code>1</code></p>
             </div>
                     </form>
 
@@ -5862,7 +6716,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --data "{
     \"title\": \"b\",
     \"description\": \"Eius et animi quos velit et.\",
-    \"event_date\": \"2026-04-23T03:46:44\",
+    \"event_date\": \"2026-04-26T04:32:14\",
     \"location\": \"v\",
     \"district\": \"d\",
     \"division\": \"l\",
@@ -5885,7 +6739,7 @@ const headers = {
 let body = {
     "title": "b",
     "description": "Eius et animi quos velit et.",
-    "event_date": "2026-04-23T03:46:44",
+    "event_date": "2026-04-26T04:32:14",
     "location": "v",
     "district": "d",
     "division": "l",
@@ -6006,10 +6860,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="event_date"                data-endpoint="POSTapi-dashboard-org-events"
-               value="2026-04-23T03:46:44"
+               value="2026-04-26T04:32:14"
                data-component="body">
     <br>
-<p>Must be a valid date. Example: <code>2026-04-23T03:46:44</code></p>
+<p>Must be a valid date. Example: <code>2026-04-26T04:32:14</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>location</code></b>&nbsp;&nbsp;
@@ -6086,13 +6940,13 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request PUT \
-    "http://localhost/api/dashboard/org/events/16" \
+    "http://localhost/api/dashboard/org/events/1" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
     --data "{
     \"title\": \"b\",
     \"description\": \"Eius et animi quos velit et.\",
-    \"event_date\": \"2026-04-23T03:46:44\",
+    \"event_date\": \"2026-04-26T04:32:14\",
     \"location\": \"v\",
     \"district\": \"d\",
     \"division\": \"l\",
@@ -6104,7 +6958,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost/api/dashboard/org/events/16"
+    "http://localhost/api/dashboard/org/events/1"
 );
 
 const headers = {
@@ -6115,7 +6969,7 @@ const headers = {
 let body = {
     "title": "b",
     "description": "Eius et animi quos velit et.",
-    "event_date": "2026-04-23T03:46:44",
+    "event_date": "2026-04-26T04:32:14",
     "location": "v",
     "district": "d",
     "division": "l",
@@ -6212,10 +7066,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="number" style="display: none"
                step="any"               name="id"                data-endpoint="PUTapi-dashboard-org-events--id-"
-               value="16"
+               value="1"
                data-component="url">
     <br>
-<p>The ID of the event. Example: <code>16</code></p>
+<p>The ID of the event. Example: <code>1</code></p>
             </div>
                             <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
         <div style=" padding-left: 28px;  clear: unset;">
@@ -6249,10 +7103,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="event_date"                data-endpoint="PUTapi-dashboard-org-events--id-"
-               value="2026-04-23T03:46:44"
+               value="2026-04-26T04:32:14"
                data-component="body">
     <br>
-<p>Must be a valid date. Example: <code>2026-04-23T03:46:44</code></p>
+<p>Must be a valid date. Example: <code>2026-04-26T04:32:14</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>location</code></b>&nbsp;&nbsp;
@@ -6329,14 +7183,14 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request DELETE \
-    "http://localhost/api/dashboard/org/events/16" \
+    "http://localhost/api/dashboard/org/events/1" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
 
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost/api/dashboard/org/events/16"
+    "http://localhost/api/dashboard/org/events/1"
 );
 
 const headers = {
@@ -6433,10 +7287,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="number" style="display: none"
                step="any"               name="id"                data-endpoint="DELETEapi-dashboard-org-events--id-"
-               value="16"
+               value="1"
                data-component="url">
     <br>
-<p>The ID of the event. Example: <code>16</code></p>
+<p>The ID of the event. Example: <code>1</code></p>
             </div>
                     </form>
 
@@ -6453,14 +7307,14 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://localhost/api/dashboard/org/events/16/registrations" \
+    --get "http://localhost/api/dashboard/org/events/1/registrations" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
 
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost/api/dashboard/org/events/16/registrations"
+    "http://localhost/api/dashboard/org/events/1/registrations"
 );
 
 const headers = {
@@ -6573,10 +7427,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="number" style="display: none"
                step="any"               name="id"                data-endpoint="GETapi-dashboard-org-events--id--registrations"
-               value="16"
+               value="1"
                data-component="url">
     <br>
-<p>The ID of the event. Example: <code>16</code></p>
+<p>The ID of the event. Example: <code>1</code></p>
             </div>
                     </form>
 
@@ -6593,19 +7447,19 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request PUT \
-    "http://localhost/api/dashboard/org/events/16/attendance" \
+    "http://localhost/api/dashboard/org/events/1/attendance" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
     --data "{
     \"profile_id\": \"architecto\",
-    \"attendance_status\": \"attended\"
+    \"attendance_status\": \"absent\"
 }"
 </code></pre></div>
 
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost/api/dashboard/org/events/16/attendance"
+    "http://localhost/api/dashboard/org/events/1/attendance"
 );
 
 const headers = {
@@ -6615,7 +7469,7 @@ const headers = {
 
 let body = {
     "profile_id": "architecto",
-    "attendance_status": "attended"
+    "attendance_status": "absent"
 };
 
 fetch(url, {
@@ -6707,10 +7561,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="number" style="display: none"
                step="any"               name="id"                data-endpoint="PUTapi-dashboard-org-events--id--attendance"
-               value="16"
+               value="1"
                data-component="url">
     <br>
-<p>The ID of the event. Example: <code>16</code></p>
+<p>The ID of the event. Example: <code>1</code></p>
             </div>
                             <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
         <div style=" padding-left: 28px;  clear: unset;">
@@ -6732,10 +7586,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="attendance_status"                data-endpoint="PUTapi-dashboard-org-events--id--attendance"
-               value="attended"
+               value="absent"
                data-component="body">
     <br>
-<p>Example: <code>attended</code></p>
+<p>Example: <code>absent</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>attended</code></li> <li><code>absent</code></li></ul>
         </div>
@@ -7895,14 +8749,14 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://localhost/api/admin/events/16" \
+    --get "http://localhost/api/admin/events/1" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
 
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost/api/admin/events/16"
+    "http://localhost/api/admin/events/1"
 );
 
 const headers = {
@@ -8015,10 +8869,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="number" style="display: none"
                step="any"               name="id"                data-endpoint="GETapi-admin-events--id-"
-               value="16"
+               value="1"
                data-component="url">
     <br>
-<p>The ID of the event. Example: <code>16</code></p>
+<p>The ID of the event. Example: <code>1</code></p>
             </div>
                     </form>
 
@@ -8035,14 +8889,14 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request PUT \
-    "http://localhost/api/admin/events/16/approve" \
+    "http://localhost/api/admin/events/1/approve" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
 
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost/api/admin/events/16/approve"
+    "http://localhost/api/admin/events/1/approve"
 );
 
 const headers = {
@@ -8139,10 +8993,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="number" style="display: none"
                step="any"               name="id"                data-endpoint="PUTapi-admin-events--id--approve"
-               value="16"
+               value="1"
                data-component="url">
     <br>
-<p>The ID of the event. Example: <code>16</code></p>
+<p>The ID of the event. Example: <code>1</code></p>
             </div>
                     </form>
 
@@ -8159,14 +9013,14 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request PUT \
-    "http://localhost/api/admin/events/16/cancel" \
+    "http://localhost/api/admin/events/1/cancel" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
 
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost/api/admin/events/16/cancel"
+    "http://localhost/api/admin/events/1/cancel"
 );
 
 const headers = {
@@ -8263,10 +9117,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="number" style="display: none"
                step="any"               name="id"                data-endpoint="PUTapi-admin-events--id--cancel"
-               value="16"
+               value="1"
                data-component="url">
     <br>
-<p>The ID of the event. Example: <code>16</code></p>
+<p>The ID of the event. Example: <code>1</code></p>
             </div>
                     </form>
 
