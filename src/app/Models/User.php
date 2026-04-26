@@ -5,10 +5,11 @@ namespace App\Models;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use PHPOpenSourceSaver\JWTAuth\Contracts\JWTSubject;
+use App\Traits\HasAuditFields;
 
 class User extends Authenticatable implements JWTSubject
 {
-    use HasFactory;
+    use HasFactory, HasAuditFields;
 
     protected $fillable = [
         'name',

@@ -28,7 +28,6 @@ abstract class TestCase extends BaseTestCase
         if ($role === 'user') {
             UserProfile::create([
                 'user_id' => $user->id,
-                'full_name' => fake()->name(),
             ]);
         }
 

@@ -14,10 +14,9 @@ class SearchDonorRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'blood_group'  => 'nullable|in:A+,A-,B+,B-,O+,O-,AB+,AB-',
-            'district'     => 'nullable|string|max:100',
-            'division'     => 'nullable|string|max:100',
-            'is_available' => 'nullable|boolean',
+            'blood_group' => 'nullable|in:A+,A-,B+,B-,O+,O-,AB+,AB-',
+            'district'    => 'nullable|string|max:100',
+            'division'    => 'nullable|string|max:100',
         ];
     }
 }

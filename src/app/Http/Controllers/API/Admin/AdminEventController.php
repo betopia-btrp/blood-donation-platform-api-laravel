@@ -5,17 +5,27 @@ namespace App\Http\Controllers\API\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Event;
 use App\Traits\ApiResponse;
+use Illuminate\Http\Request;
 
 class AdminEventController extends Controller
 {
     use ApiResponse;
 
-    public function index()
+    public function index(Request $request)
     {
-        $events = Event::with(['organization:id,org_name'])
+        $query = Event::with(['organization:id,org_name'])
             ->withCount('registrations')
-            ->orderBy('created_at', 'desc')
-            ->paginate(20);
+            ->orderBy('created_at', 'desc');
+
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        if ($request->filled('search')) {
+            $query->where('title', 'ilike', '%' . $request->search . '%');
+        }
+
+        $events = $query->paginate(20);
 
         return $this->success([
             'events'       => $events->items(),

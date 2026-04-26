@@ -200,8 +200,7 @@ class EventDiscoveryController extends Controller
 
         Report::create([
             'reporter_user_id' => $user->id,
-            'target_id'        => $id,
-            'target_type'      => 'event',
+            'target_event_id'  => $id,
             'report_type'      => $request->input('report_type', 'other'),
             'reason'           => $request->input('reason'),
             'status'           => 'pending',

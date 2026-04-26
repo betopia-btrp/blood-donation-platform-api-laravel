@@ -6,21 +6,35 @@ use App\Http\Controllers\Controller;
 use App\Models\DonationRequest;
 use App\Models\DonationRequestRecipient;
 use App\Traits\ApiResponse;
+use Illuminate\Http\Request;
 
 class AdminDonationRequestController extends Controller
 {
     use ApiResponse;
 
-    public function index()
+    public function index(Request $request)
     {
-        $requests = DonationRequest::with(['requester:id,name,email'])
+        $query = DonationRequest::with(['requester:id,name,email'])
             ->withCount([
                 'recipients',
                 'recipients as accepted_count' => fn($q) => $q->where('response_status', 'accepted'),
                 'recipients as donated_count'  => fn($q) => $q->where('response_status', 'donated'),
             ])
-            ->orderBy('created_at', 'desc')
-            ->paginate(20);
+            ->orderBy('created_at', 'desc');
+
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        if ($request->filled('blood_group')) {
+            $query->where('blood_group', $request->blood_group);
+        }
+
+        if ($request->filled('district')) {
+            $query->where('district', 'ilike', '%' . $request->district . '%');
+        }
+
+        $requests = $query->paginate(20);
 
         return $this->success([
             'requests'     => $requests->items(),

@@ -24,26 +24,6 @@ class EventController extends Controller
         }
     }
 
-    public function index()
-    {
-        $user = $this->getUser();
-        if (!$user) return $this->error('Unauthenticated', 401);
-
-        $org = $user->organization;
-        if (!$org) return $this->error('Organization profile not found', 404);
-
-        $events = Event::where('organization_id', $org->id)
-            ->orderBy('event_date', 'asc')
-            ->paginate(20);
-
-        return $this->success([
-            'events'       => $events->items(),
-            'current_page' => $events->currentPage(),
-            'last_page'    => $events->lastPage(),
-            'total'        => $events->total(),
-        ], 'Events retrieved');
-    }
-
     public function store(Request $request)
     {
         $user = $this->getUser();
@@ -85,20 +65,6 @@ class EventController extends Controller
         ]);
 
         return $this->success($event, 'Event created. Pending admin approval.', 201);
-    }
-
-    public function show($id)
-    {
-        $user = $this->getUser();
-        if (!$user) return $this->error('Unauthenticated', 401);
-
-        $org = $user->organization;
-        if (!$org) return $this->error('Organization profile not found', 404);
-
-        $event = Event::where('organization_id', $org->id)->find($id);
-        if (!$event) return $this->error('Event not found', 404);
-
-        return $this->success($event, 'Event details retrieved');
     }
 
     public function update(Request $request, $id)

@@ -151,4 +151,70 @@ class DonationRequestTest extends TestCase
 
         $response->assertStatus(400);
     }
+
+    public function test_completing_request_penalizes_accepted_but_not_donated_donors()
+    {
+        $requester = $this->createUser('user');
+        $donor     = $this->createUser('user');
+
+        $res = $this->createRequest($requester, [$donor]);
+        $id  = $res->json('data.request.id');
+
+        $donor->profile->trust_score = 0.80;
+        $donor->profile->save();
+
+        DonationRequestRecipient::where('request_id', $id)->update([
+            'response_status' => 'accepted',
+        ]);
+
+        Payment::create([
+            'donation_request_id' => $id,
+            'payer_user_id'       => $requester->id,
+            'amount'              => 0,
+            'status'              => 'confirmed',
+            'confirmed_at'        => now(),
+        ]);
+
+        $this->postJson(
+            '/api/donation-requests/' . $id . '/complete',
+            [],
+            $this->authHeader($requester)
+        )->assertStatus(200);
+
+        $donor->profile->refresh();
+        $this->assertEquals(0.70, $donor->profile->trust_score);
+    }
+
+    public function test_completing_request_does_not_penalize_donated_donors()
+    {
+        $requester = $this->createUser('user');
+        $donor     = $this->createUser('user');
+
+        $res = $this->createRequest($requester, [$donor]);
+        $id  = $res->json('data.request.id');
+
+        $donor->profile->trust_score = 0.80;
+        $donor->profile->save();
+
+        DonationRequestRecipient::where('request_id', $id)->update([
+            'response_status' => 'donated',
+        ]);
+
+        Payment::create([
+            'donation_request_id' => $id,
+            'payer_user_id'       => $requester->id,
+            'amount'              => 0,
+            'status'              => 'confirmed',
+            'confirmed_at'        => now(),
+        ]);
+
+        $this->postJson(
+            '/api/donation-requests/' . $id . '/complete',
+            [],
+            $this->authHeader($requester)
+        )->assertStatus(200);
+
+        $donor->profile->refresh();
+        $this->assertEquals(0.80, $donor->profile->trust_score);
+    }
 }

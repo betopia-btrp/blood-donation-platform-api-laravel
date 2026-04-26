@@ -69,14 +69,19 @@ class UserDashboardController extends Controller
                 'donorProfile.user:id,name,email',
             ])
                 ->where('request_id', $id)
-                ->where('response_status', 'accepted')
+                ->whereIn('response_status', ['accepted', 'donated'])
                 ->get()
                 ->map(fn($item) => [
-                    'name'        => $item->donorProfile->user->name,
-                    'email'       => $item->donorProfile->user->email,
-                    'blood_group' => $item->donorProfile->blood_group,
-                    'district'    => $item->donorProfile->district,
-                    'trust_score' => $item->donorProfile->trust_score,
+                    'name'                   => $item->donorProfile->user->name,
+                    'email'                  => $item->donorProfile->user->email,
+                    'blood_group'            => $item->donorProfile->blood_group,
+                    'district'               => $item->donorProfile->district,
+                    'trust_score'            => $item->donorProfile->trust_score,
+                    'response_status'        => $item->response_status,
+                    'donor_confirmed'        => $item->donor_confirmed,
+                    'requester_confirmed'    => $item->requester_confirmed,
+                    'donor_confirmed_at'     => $item->donor_confirmed_at,
+                    'requester_confirmed_at' => $item->requester_confirmed_at,
                 ]);
         }
 
@@ -86,30 +91,6 @@ class UserDashboardController extends Controller
             'payment_confirmed' => (bool) $payment,
             'accepted_donors'  => $donors,
         ], 'Request details retrieved');
-    }
-
-    // My Incoming Requests
-    public function incomingRequests()
-    {
-        $user = $this->getUser();
-        if (!$user) return $this->error('Unauthenticated', 401);
-
-        $profile = $user->profile;
-        if (!$profile) return $this->error('Donor profile not found', 404);
-
-        $requests = DonationRequestRecipient::with([
-            'donationRequest:id,blood_group,quantity,hospital_name,district,status,needed_at',
-        ])
-            ->where('donor_profile_id', $profile->id)
-            ->orderBy('sent_at', 'desc')
-            ->paginate(20);
-
-        return $this->success([
-            'requests'     => $requests->items(),
-            'current_page' => $requests->currentPage(),
-            'last_page'    => $requests->lastPage(),
-            'total'        => $requests->total(),
-        ], 'Incoming requests retrieved');
     }
 
     // My Registered Events
@@ -150,7 +131,7 @@ class UserDashboardController extends Controller
         ])
             ->where('donor_profile_id', $profile->id)
             ->where('response_status', 'donated')
-            ->orderBy('responded_at', 'desc')
+            ->orderBy('donor_confirmed_at', 'desc')
             ->paginate(20);
 
         return $this->success([

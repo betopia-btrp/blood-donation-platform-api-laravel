@@ -73,6 +73,7 @@ Route::middleware(['auth:api', 'throttle:60,1'])->group(function () {
     Route::post('/events/{id}/register',   [EventDiscoveryController::class, 'register']);
     Route::delete('/events/{id}/register', [EventDiscoveryController::class, 'cancelRegistration']);
     Route::post('/events/{id}/report',     [EventDiscoveryController::class, 'report']);
+    Route::post('/users/{id}/report',      [DonorController::class, 'report']);
 });
 
 // Donation Requests
@@ -86,6 +87,7 @@ Route::middleware(['auth:api', 'throttle:60,1'])
         Route::post('/{id}/confirm-payment', [DonationRequestController::class, 'confirmPayment']);
         Route::get('/{id}/donors-revealed',  [DonationRequestController::class, 'donorsRevealed']);
         Route::post('/{id}/complete',        [DonationRequestController::class, 'complete']);
+        Route::post('/{id}/confirm-received/{donorProfileId}', [DonationRequestController::class, 'confirmReceived']);
         Route::post('/{id}/report',          [DonationRequestController::class, 'report']);
     });
 
@@ -106,7 +108,6 @@ Route::middleware(['auth:api', 'role:user', 'throttle:60,1'])
     ->group(function () {
         Route::get('/my-requests',       [UserDashboardController::class, 'myRequests']);
         Route::get('/my-requests/{id}',  [UserDashboardController::class, 'myRequestShow']);
-        Route::get('/incoming-requests', [UserDashboardController::class, 'incomingRequests']);
         Route::get('/my-events',         [UserDashboardController::class, 'myEvents']);
         Route::get('/my-donations',      [UserDashboardController::class, 'myDonations']);
         Route::get('/stats',             [UserDashboardController::class, 'stats']);

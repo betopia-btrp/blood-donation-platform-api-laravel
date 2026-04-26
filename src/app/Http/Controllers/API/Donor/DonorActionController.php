@@ -75,6 +75,20 @@ class DonorActionController extends Controller
         $profile = $user->profile;
         if (!$profile) return $this->error('Donor profile not found', 404);
 
+        if ($profile->last_donation_date &&
+            \Carbon\Carbon::parse($profile->last_donation_date)->addDays(120)->isFuture()) {
+            return $this->error('You cannot accept a donation request within 120 days of your last donation', 400);
+        }
+
+        $hasActiveAcceptance = DonationRequestRecipient::where('donor_profile_id', $profile->id)
+            ->where('response_status', 'accepted')
+            ->whereHas('donationRequest', fn($q) => $q->where('status', 'open'))
+            ->exists();
+
+        if ($hasActiveAcceptance) {
+            return $this->error('You already have an active accepted donation request', 400);
+        }
+
         $recipient = DonationRequestRecipient::where('id', $id)
             ->where('donor_profile_id', $profile->id)
             ->first();
@@ -143,18 +157,29 @@ class DonorActionController extends Controller
             return $this->error('You must accept the request before confirming donation', 400);
         }
 
+        if ($recipient->donor_confirmed) {
+            return $this->error('You have already confirmed this donation', 400);
+        }
+
         $recipient->update([
-            'response_status' => 'donated',
-            'responded_at'    => now(),
+            'donor_confirmed'    => true,
+            'donor_confirmed_at' => now(),
         ]);
 
-        $profile->trust_score = min(1.00, $profile->trust_score + 0.05);
-        $profile->save();
+        $recipient->refresh();
 
-        $profile->update(['last_donation_date' => now()]);
+        if ($recipient->requester_confirmed) {
+            $newScore = min(1.00, (float) $profile->trust_score + 0.05);
+            $profile->trust_score = $newScore;
+            $profile->last_donation_date = now();
+            $profile->save();
+            $recipient->update(['response_status' => 'donated']);
 
-        return $this->success([
-            'trust_score' => $profile->trust_score,
-        ], 'Donation confirmed. Trust score updated.');
+            return $this->success([
+                'trust_score' => $newScore,
+            ], 'Donation confirmed by both parties. Trust score updated.');
+        }
+
+        return $this->success(null, 'Donation confirmed. Waiting for requester confirmation.');
     }
 }

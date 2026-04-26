@@ -5,8 +5,11 @@ namespace App\Http\Controllers\API\Donor;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Donor\SearchDonorRequest;
 use App\Models\DonationRequestRecipient;
+use App\Models\Report;
+use App\Models\User;
 use App\Models\UserProfile;
 use App\Traits\ApiResponse;
+use Illuminate\Http\Request;
 use PHPOpenSourceSaver\JWTAuth\Facades\JWTAuth;
 
 class DonorController extends Controller
@@ -131,5 +134,39 @@ class DonorController extends Controller
         }
 
         return $this->success($data, 'Donor profile retrieved');
+    }
+
+    public function report(Request $request, $id)
+    {
+        try {
+            $user = JWTAuth::parseToken()->authenticate();
+        } catch (\Exception $e) {
+            return $this->error('Unauthenticated', 401);
+        }
+
+        if ((int) $id === $user->id) {
+            return $this->error('You cannot report yourself', 400);
+        }
+
+        $target = User::where('id', $id)->where('is_active', true)->first();
+
+        if (!$target) {
+            return $this->error('User not found', 404);
+        }
+
+        $request->validate([
+            'report_type' => 'nullable|in:spam,fake,abusive,other',
+            'reason'      => 'nullable|string',
+        ]);
+
+        Report::create([
+            'reporter_user_id' => $user->id,
+            'target_user_id'   => $id,
+            'report_type'      => $request->input('report_type', 'other'),
+            'reason'           => $request->input('reason'),
+            'status'           => 'pending',
+        ]);
+
+        return $this->success(null, 'Report submitted');
     }
 }

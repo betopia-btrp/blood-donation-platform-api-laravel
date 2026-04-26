@@ -134,7 +134,7 @@ class UserDashboardTest extends TestCase
             'sent_at' => now(),
         ]);
 
-        $response = $this->getJson('/api/dashboard/incoming-requests', $this->authHeader($donor));
+        $response = $this->getJson('/api/my/incoming-requests', $this->authHeader($donor));
 
         $response->assertStatus(200)
             ->assertJsonStructure([

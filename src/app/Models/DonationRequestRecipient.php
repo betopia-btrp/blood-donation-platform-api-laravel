@@ -4,22 +4,31 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Traits\HasAuditFields;
 
 class DonationRequestRecipient extends Model
 {
-    use HasFactory;
+    use HasFactory, HasAuditFields;
     protected $fillable = [
         'request_id',
         'donor_profile_id',
         'response_status',
         'sent_at',
         'responded_at',
-        'note'
+        'note',
+        'donor_confirmed',
+        'requester_confirmed',
+        'donor_confirmed_at',
+        'requester_confirmed_at',
     ];
 
     protected $casts = [
-        'sent_at'      => 'datetime',
-        'responded_at' => 'datetime',
+        'sent_at'                => 'datetime',
+        'responded_at'           => 'datetime',
+        'donor_confirmed'        => 'boolean',
+        'requester_confirmed'    => 'boolean',
+        'donor_confirmed_at'     => 'datetime',
+        'requester_confirmed_at' => 'datetime',
     ];
 
     public function donationRequest()

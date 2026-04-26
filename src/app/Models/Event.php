@@ -4,10 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Traits\HasAuditFields;
 
 class Event extends Model
 {
-    use HasFactory;
+    use HasFactory, HasAuditFields;
 
     protected $fillable = [
         'organization_id',

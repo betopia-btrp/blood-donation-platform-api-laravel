@@ -4,10 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Traits\HasAuditFields;
 
 class DonationRequest extends Model
 {
-    use HasFactory;
+    use HasFactory, HasAuditFields;
     protected $fillable = [
         'requester_user_id',
         'blood_group',

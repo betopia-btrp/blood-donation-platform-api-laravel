@@ -5,22 +5,40 @@ namespace App\Http\Controllers\API\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Traits\ApiResponse;
+use Illuminate\Http\Request;
 
 class UserManagementController extends Controller
 {
     use ApiResponse;
 
-    public function index()
+    public function index(Request $request)
     {
-        $users = User::with(['profile', 'organization'])
-            ->orderBy('created_at', 'desc')
-            ->paginate(20);
+        $query = User::with(['profile', 'organization'])
+            ->orderBy('created_at', 'desc');
+
+        if ($request->filled('role')) {
+            $query->whereHas('role', fn($q) => $q->where('name', $request->role));
+        }
+
+        if ($request->has('is_active')) {
+            $query->where('is_active', filter_var($request->is_active, FILTER_VALIDATE_BOOLEAN));
+        }
+
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'ilike', '%' . $search . '%')
+                  ->orWhere('email', 'ilike', '%' . $search . '%');
+            });
+        }
+
+        $users = $query->paginate(20);
 
         return $this->success([
-            'users' => $users->items(),
+            'users'        => $users->items(),
             'current_page' => $users->currentPage(),
-            'last_page' => $users->lastPage(),
-            'total' => $users->total(),
+            'last_page'    => $users->lastPage(),
+            'total'        => $users->total(),
         ], 'Users retrieved');
     }
 

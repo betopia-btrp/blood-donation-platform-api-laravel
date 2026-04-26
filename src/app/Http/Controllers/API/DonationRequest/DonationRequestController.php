@@ -241,15 +241,14 @@ class DonationRequestController extends Controller
             return $this->error('Request is not open', 400);
         }
 
-        $acceptedCount = DonationRequestRecipient::where('request_id', $id)
-            ->where('response_status', 'accepted')
+        $progressCount = DonationRequestRecipient::where('request_id', $id)
+            ->whereIn('response_status', ['accepted', 'donated'])
             ->count();
 
-        if ($acceptedCount === 0) {
+        if ($progressCount === 0) {
             return $this->error('Cannot complete request with no accepted donors', 400);
         }
 
-        // Must have confirmed payment
         $payment = Payment::where('donation_request_id', $id)
             ->where('status', 'confirmed')
             ->first();
@@ -260,7 +259,76 @@ class DonationRequestController extends Controller
 
         $donationRequest->update(['status' => 'fulfilled']);
 
+        $ghosted = DonationRequestRecipient::where('request_id', $id)
+            ->where('response_status', 'accepted')
+            ->with('donorProfile')
+            ->get();
+
+        foreach ($ghosted as $recipient) {
+            if ($recipient->donorProfile) {
+                $recipient->donorProfile->trust_score = max(0.00, (float) $recipient->donorProfile->trust_score - 0.10);
+                $recipient->donorProfile->save();
+            }
+        }
+
         return $this->success(null, 'Request marked as completed');
+    }
+
+    public function confirmReceived($id, $donorProfileId)
+    {
+        try {
+            $user = JWTAuth::parseToken()->authenticate();
+        } catch (\Exception $e) {
+            return $this->error('Unauthenticated', 401);
+        }
+
+        $donationRequest = DonationRequest::find($id);
+
+        if (!$donationRequest) {
+            return $this->error('Request not found', 404);
+        }
+
+        if ($donationRequest->requester_user_id !== $user->id) {
+            return $this->error('Forbidden', 403);
+        }
+
+        $recipient = DonationRequestRecipient::where('request_id', $id)
+            ->where('donor_profile_id', $donorProfileId)
+            ->first();
+
+        if (!$recipient) {
+            return $this->error('Donor recipient not found', 404);
+        }
+
+        if ($recipient->response_status !== 'accepted') {
+            return $this->error('Donor has not accepted this request', 400);
+        }
+
+        if ($recipient->requester_confirmed) {
+            return $this->error('You have already confirmed this donation', 400);
+        }
+
+        $recipient->update([
+            'requester_confirmed'    => true,
+            'requester_confirmed_at' => now(),
+        ]);
+
+        $recipient->refresh();
+
+        if ($recipient->donor_confirmed) {
+            $donorProfile = UserProfile::find($donorProfileId);
+            $newScore = min(1.00, (float) $donorProfile->trust_score + 0.05);
+            $donorProfile->trust_score = $newScore;
+            $donorProfile->last_donation_date = now();
+            $donorProfile->save();
+            $recipient->update(['response_status' => 'donated']);
+
+            return $this->success([
+                'trust_score' => $newScore,
+            ], 'Donation confirmed by both parties. Trust score updated.');
+        }
+
+        return $this->success(null, 'Donation received confirmed. Waiting for donor confirmation.');
     }
 
     public function report(Request $request, $id)
@@ -278,12 +346,11 @@ class DonationRequestController extends Controller
         }
 
         Report::create([
-            'reporter_user_id' => $user->id,
-            'target_id' => $id,
-            'target_type' => 'donation_request',
-            'report_type' => $request->input('report_type', 'other'),
-            'reason' => $request->input('reason'),
-            'status' => 'pending',
+            'reporter_user_id'           => $user->id,
+            'target_donation_request_id' => $id,
+            'report_type'                => $request->input('report_type', 'other'),
+            'reason'                     => $request->input('reason'),
+            'status'                     => 'pending',
         ]);
 
         return $this->success(null, 'Report submitted');

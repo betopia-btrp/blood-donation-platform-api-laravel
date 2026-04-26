@@ -4,17 +4,19 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Traits\HasAuditFields;
 
 class Report extends Model
 {
-    use HasFactory;
+    use HasFactory, HasAuditFields;
     protected $fillable = [
         'reporter_user_id',
-        'target_id',
-        'target_type',
+        'target_user_id',
+        'target_donation_request_id',
+        'target_event_id',
         'report_type',
         'reason',
-        'status'
+        'status',
     ];
 
     public function reporter()
@@ -22,13 +24,18 @@ class Report extends Model
         return $this->belongsTo(User::class, 'reporter_user_id');
     }
 
-    public function target()
+    public function targetUser()
     {
-        return match ($this->target_type) {
-            'user'             => $this->belongsTo(User::class, 'target_id'),
-            'donation_request' => $this->belongsTo(DonationRequest::class, 'target_id'),
-            'event'            => $this->belongsTo(Event::class, 'target_id'),
-            default            => null,
-        };
+        return $this->belongsTo(User::class, 'target_user_id');
+    }
+
+    public function targetDonationRequest()
+    {
+        return $this->belongsTo(DonationRequest::class, 'target_donation_request_id');
+    }
+
+    public function targetEvent()
+    {
+        return $this->belongsTo(Event::class, 'target_event_id');
     }
 }
