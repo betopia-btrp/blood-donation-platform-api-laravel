@@ -72,6 +72,7 @@ class UserDashboardController extends Controller
                 ->whereIn('response_status', ['accepted', 'donated'])
                 ->get()
                 ->map(fn($item) => [
+                    'profile_id'             => $item->donor_profile_id,
                     'name'                   => $item->donorProfile->user->name,
                     'email'                  => $item->donorProfile->user->email,
                     'blood_group'            => $item->donorProfile->blood_group,
