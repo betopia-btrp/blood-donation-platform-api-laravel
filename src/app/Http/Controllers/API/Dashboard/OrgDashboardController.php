@@ -72,6 +72,7 @@ class OrgDashboardController extends Controller
             ->map(fn($item) => [
                 'registration_id'   => $item->id,
                 'name'              => $item->profile->user->name,
+                'profile_id'        => $item->profile->id,
                 'email'             => $item->profile->user->email,
                 'blood_group'       => $item->profile->blood_group,
                 'district'          => $item->profile->district,

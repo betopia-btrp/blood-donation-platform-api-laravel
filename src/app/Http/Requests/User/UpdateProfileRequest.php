@@ -22,7 +22,6 @@ class UpdateProfileRequest extends FormRequest
             'last_donation_date' => 'nullable|date|before_or_equal:today',
             'avatar_url'         => 'nullable|string',
             'name'               => 'nullable|string|max:100',
-            'phone'              => 'nullable|string|max:20',
         ];
     }
 }

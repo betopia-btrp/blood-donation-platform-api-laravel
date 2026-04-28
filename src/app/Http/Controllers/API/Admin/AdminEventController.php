@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Event;
+use App\Models\EventRegistration;
 use App\Traits\ApiResponse;
 use Illuminate\Http\Request;
 
@@ -14,7 +15,11 @@ class AdminEventController extends Controller
     public function index(Request $request)
     {
         $query = Event::with(['organization:id,org_name'])
-            ->withCount('registrations')
+            ->withCount([
+                'registrations',
+                'registrations as attended_count' => fn($q) => $q->where('attendance_status', 'attended'),
+                'registrations as absent_count'   => fn($q) => $q->where('attendance_status', 'absent'),
+            ])
             ->orderBy('created_at', 'desc');
 
         if ($request->filled('status')) {
@@ -47,7 +52,28 @@ class AdminEventController extends Controller
 
         if (!$event) return $this->error('Event not found', 404);
 
-        return $this->success($event, 'Event details retrieved');
+        $registrations = EventRegistration::with([
+            'profile:id,user_id,blood_group,district,trust_score',
+            'profile.user:id,name,email',
+        ])
+            ->where('event_id', $id)
+            ->get()
+            ->map(fn($item) => [
+                'registration_id'   => $item->id,
+                'profile_id'        => $item->profile->id,
+                'name'              => $item->profile->user->name,
+                'email'             => $item->profile->user->email,
+                'blood_group'       => $item->profile->blood_group,
+                'district'          => $item->profile->district,
+                'trust_score'       => $item->profile->trust_score,
+                'attendance_status' => $item->attendance_status,
+                'registration_date' => $item->registration_date,
+            ]);
+
+        return $this->success([
+            'event'         => $event,
+            'registrations' => $registrations,
+        ], 'Event details retrieved');
     }
 
     public function approve($id)

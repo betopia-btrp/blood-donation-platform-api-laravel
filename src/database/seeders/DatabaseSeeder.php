@@ -24,7 +24,7 @@ class DatabaseSeeder extends Seeder
         ]);
 
         // Donors (20 users)
-        $donors = User::factory(20)->create();
+        $donors = User::factory(50)->create();
         $donorProfiles = $donors->map(function ($user) {
             return UserProfile::factory()->create(['user_id' => $user->id]);
         });

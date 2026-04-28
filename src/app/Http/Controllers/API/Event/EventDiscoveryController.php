@@ -180,7 +180,7 @@ class EventDiscoveryController extends Controller
             return $this->error('Cannot cancel after attendance is marked', 400);
         }
 
-        $registration->delete();
+        $registration->forceDelete();
 
         return $this->success(null, 'Registration cancelled');
     }
