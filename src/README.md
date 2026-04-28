@@ -45,10 +45,11 @@ docker compose up -d --build
 
 docker exec -it blood_app bash
 
-composer install
+# Add .env to src/
 php artisan key:generate
 php artisan jwt:secret
-php artisan migrate --seed
+
+php artisan migrate:fresh --seed
 
 exit
 ```
