@@ -130,6 +130,7 @@ class EventController extends Controller
 
         $data = collect($registrations->items())->map(fn($item) => [
             'registration_id'   => $item->id,
+            'profile_id'        => $item->profile->id,
             'name'              => $item->profile->user->name,
             'email'             => $item->profile->user->email,
             'blood_group'       => $item->profile->blood_group,
