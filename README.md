@@ -47,6 +47,7 @@ https://drive.google.com/file/d/1lVcqXjumny18BngJyIXrols8H5X91DzE/view?usp=shari
 docker compose up -d --build
 
 docker exec -it blood_app bash
+composer install
 php artisan key:generate
 php artisan jwt:secret
 
