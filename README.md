@@ -38,10 +38,12 @@ Requires Docker and Docker Compose only. No local PHP or PostgreSQL installation
 ```bash
 git clone https://github.com/your-org/blood-donation-api.git
 cd blood-donation-api
+```
 
 Download the .env file from here and paste it inside src folder
 https://drive.google.com/file/d/1lVcqXjumny18BngJyIXrols8H5X91DzE/view?usp=sharing
 
+```bash
 docker compose up -d --build
 
 docker exec -it blood_app bash
