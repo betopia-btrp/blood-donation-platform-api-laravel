@@ -43,6 +43,8 @@ cd blood-donation-api
 Download the .env file from here and paste it inside src folder
 https://drive.google.com/file/d/1lVcqXjumny18BngJyIXrols8H5X91DzE/view?usp=sharing
 
+Make sure the file is named as `**.env**`
+
 ```bash
 docker compose up -d --build
 
